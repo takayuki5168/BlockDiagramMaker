@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
 class ExtendedBlock: 
+
     def __init__(self, widget, x, y):
         self.box = QPainter(widget)
         self.box.setPen(QColor(0, 0, 20))
