@@ -32,6 +32,9 @@ def initButton(widget):
     widget.button_manager.push('Remove', widget, 280, 10, widget.setMode)
     widget.button_manager.push('Undo', widget, 370, 10, widget.setMode)
     widget.button_manager.push('Save', widget, 460, 10, widget.setMode)
+    widget.button_manager.push('Exit', widget, 550, 10, widget.close)
+
+    #widget.button_manager.button_list.list[0].button.setChecked(True)
 
 def initBlock(widget):
     widget.block_manager = block.BlockManager()

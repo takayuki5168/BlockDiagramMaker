@@ -17,7 +17,9 @@ class MyWidget(QWidget):
 
         init.init(self)
 
-        self.mode = 'Cursor'
+        self.setMouseTracking(True)
+
+        self.mode = 'None' #'Cursor'
         self.show()
 
     def mousePressEvent(self, mouse_event):
@@ -28,6 +30,9 @@ class MyWidget(QWidget):
 
     def mouseReleaseEvent(self, mouse_event):
         self.event.mouseRelease(mouse_event, self)
+
+    def keyPressEvent(self, key_event):
+        self.event.keyPress(key_event, self)
 
     def paintEvent(self, event):
         canvas = QPainter(self)
@@ -45,7 +50,6 @@ class MyWidget(QWidget):
     def sigIntHandler(self, signal, frame):
         print('call SigIntHandler')
         sys.exit(0)
-
 
 if __name__ == '__main__':
 
