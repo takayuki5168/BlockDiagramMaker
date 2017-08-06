@@ -27,12 +27,12 @@ def initUI(widget):
 def initButton(widget):
     widget.button_manager = button.ButtonManager()
 
-    widget.button_manager.push('Cursor', widget, 10, 10, widget.setMode)
-    widget.button_manager.push('Block', widget, 100, 10, widget.setMode)
-    widget.button_manager.push('Arrow', widget, 190, 10, widget.setMode)
-    widget.button_manager.push('Remove', widget, 280, 10, widget.setMode)
-    widget.button_manager.push('Undo', widget, 370, 10, widget.setMode)
-    widget.button_manager.push('Save', widget, 460, 10, widget.setMode)
+    widget.button_manager.push('Cursor', widget, 10, 10, widget.setOperateMode)
+    widget.button_manager.push('Block', widget, 100, 10, widget.setOperateMode)
+    widget.button_manager.push('Arrow', widget, 190, 10, widget.setOperateMode)
+    widget.button_manager.push('Remove', widget, 280, 10, widget.setOperateMode)
+    widget.button_manager.push('Undo', widget, 370, 10, widget.setOperateMode)
+    widget.button_manager.push('Save', widget, 460, 10, widget.setOperateMode)
     widget.button_manager.push('Exit', widget, 550, 10, widget.close)
 
 def initBlock(widget):

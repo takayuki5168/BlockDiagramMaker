@@ -16,7 +16,7 @@ class MyWidget(QWidget):
         signal.signal(signal.SIGINT, self.sigIntHandler)
         init.init(self)
         self.setMouseTracking(True)
-        self.mode = 'None'
+        self.operate_mode = 'None'
 
         self.show()
 
@@ -38,12 +38,12 @@ class MyWidget(QWidget):
         self.block_manager.paint(self, canvas)
         self.arrow_manager.paint(self, canvas)
 
-    def setMode(self, toggled):
+    def setOperateMode(self, toggled):
         source = self.sender()
 
         if toggled:
             self.button_manager.setButton(source.text())
-            self.mode = source.text()
+            self.operate_mode = source.text()
 
     def sigIntHandler(self, signal, frame):
         print('call SigIntHandler')

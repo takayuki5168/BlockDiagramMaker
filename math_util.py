@@ -4,42 +4,58 @@ from PyQt5.QtWidgets import * #QWidget, QPushButton, QFrame, QApplication, QLine
 from PyQt5.QtGui import *
 from PyQt5.QtCore import QPoint
 
-# 点と直線
-def nearestPointLine(point_x, point_y, line_start_x, line_start_y, line_end_x, line_end_y):
-    if line_start_x == line_end_x: # when vertical line
-        small_y = min(line_start_y, line_end_y)
-        large_y = max(line_start_y, line_end_y)
+import block, arrow
 
-        if large_y <= point_y:
-            return QPoint(line_start_x, large_y)
-        elif large_y > point_y or small_y < point_y:
-            return QPoint(line_start_x, point_y)
+# 点と直線
+def nearestPointLine(po_pos, line_start, line_end):
+    po_x = po_pos.x()
+    po_y = po_pos.y()
+    li_start_x = line_start.x()
+    li_start_y = line_start.y()
+    li_end_x = line_end.x()
+    li_end_y = line_end.y()
+
+    if li_start_x == li_end_x: # when vertical line
+        small_y = min(li_start_y, li_end_y)
+        large_y = max(li_start_y, li_end_y)
+
+        if large_y <= po_y:
+            return QPoint(li_start_x, large_y)
+        elif large_y > po_y or small_y < po_y:
+            return QPoint(li_start_x, po_y)
         else:
-            return QPoint(line_start_x, small_y)
+            return QPoint(li_start_x, small_y)
 
     else: # when horizontal line
-        small_x = min(line_start_x, line_end_x)
-        large_x = max(line_start_x, line_end_x)
+        small_x = min(li_start_x, li_end_x)
+        large_x = max(li_start_x, li_end_x)
 
-        if large_x <= point_x:
-            return QPoint(large_x, line_start_y)
-        elif large_x > point_x or small_x < point_x:
-            return QPoint(point_x, line_start_y)
+        if large_x <= po_x:
+            return QPoint(large_x, li_start_y)
+        elif large_x > po_x or small_x < po_x:
+            return QPoint(po_x, li_start_y)
         else:
-            return QPoint(small_x, line_start_y)
+            return QPoint(small_x, li_start_y)
 
 # 点とブロック
-def nearestPointBlock(point_x, point_y, block_start_x, block_start_y, block_end_x, block_end_y):
+def nearestPointBlock(point_pos, block_start, block_end):
+    po_x = point_pos.x()
+    po_y = point_pos.y()
+    bl_start_x = block_start.x()
+    bl_start_y = block_start.y()
+    bl_end_x = block_end.x()
+    bl_end_y = block_end.y()
+
     pos = []
 
-    pos.append(nearestPointLine(point_x, point_y, block_start_x, block_start_y, block_end_x, block_start_y))
-    pos.append(nearestPointLine(point_x, point_y, block_end_x, block_start_y, block_end_x, block_end_y))
-    pos.append(nearestPointLine(point_x, point_y, block_start_x, block_end_y, block_end_x, block_end_y))
-    pos.append(nearestPointLine(point_x, point_y, block_start_x, block_start_y, block_start_x, block_end_y))
+    pos.append(nearestPointLine(point_pos, QPoint(bl_start_x, bl_start_y), QPoint(bl_end_x, bl_start_y)))
+    pos.append(nearestPointLine(point_pos, QPoint(bl_end_x, bl_start_y), QPoint(bl_end_x, bl_end_y)))
+    pos.append(nearestPointLine(point_pos, QPoint(bl_start_x, bl_end_y), QPoint(bl_end_x, bl_end_y)))
+    pos.append(nearestPointLine(point_pos, QPoint(bl_start_x, bl_start_y), QPoint(bl_start_x, bl_end_y)))
 
     dis = []
     for p in pos:
-        dis.append(math.hypot(p.x() - point_x, p.y() - point_y))
+        dis.append(math.hypot(p.x() - po_x, p.y() - po_y))
 
     pos_dis = [pos[0], dis[0]]
     for i in range(len(pos) - 1):
@@ -49,18 +65,23 @@ def nearestPointBlock(point_x, point_y, block_start_x, block_start_y, block_end_
     return pos_dis
 
 # 点と矢印
-def nearestPointArrow(point_x, point_y, way_pos):
-    if way_pos == []:
+def nearestPointArrow(point_pos, arrow_way_pos):
+    pos_x = point_pos.x()
+    pos_y = point_pos.y()
+
+    if arrow_way_pos == []:
         return [None, None]
 
     pos = []
 
-    for i in range(len(way_pos) - 1):
-        pos.append(nearestPointLine(point_x, point_y, way_pos[i].x(), way_pos[i].y(), way_pos[i + 1].x(), way_pos[i + 1].y()))
+    for i in range(len(arrow_way_pos) - 1):
+        ar_pre_p = arrow_way_pos[i]
+        ar_post_p = arrow_way_pos[i + 1]
+        pos.append(nearestPointLine(point_pos, ar_pre_p, ar_post_p))
 
     dis = []
     for p in pos:
-        dis.append(math.hypot(p.x() - point_x, p.y() - point_y))
+        dis.append(math.hypot(p.x() - pos_x, p.y() - pos_y))
 
     pos_dis = [pos[0], dis[0]]
     for i in range(len(pos) - 1):
@@ -70,20 +91,25 @@ def nearestPointArrow(point_x, point_y, way_pos):
     return pos_dis
 
 # ブロックと矢印
-def nearestBlockArrow(block_start_x, block_start_y, block_end_x, block_end_y, way_pos):
-    if way_pos == []:
+def nearestBlockArrow(block_start, block_end, ar_way_pos):
+    bl_start_x = block_start.x()
+    bl_start_y = block_start.y()
+    bl_end_x = block_end.x()
+    bl_end_y = block_end.y()
+
+    if ar_way_pos == []:
         return [None, None]
     
     pos = []
 
-    pos.append(nearestPointLine(point_x, point_y, way_pos[0].x(), way_pos[0].y(), block_start_x, block_end_y, block_end_x, block_end_y))
-    pos.append(nearestPointLine(point_x, point_y, way_pos[0].x(), way_pos[0].y(), block_end_x, block_start_y, block_end_x, block_end_y))
-    pos.append(nearestPointLine(point_x, point_y, way_pos[-1].x(), way_pos[-1].y(), block_start_x, block_end_y, block_end_x, block_end_y))
-    pos.append(nearestPointLine(point_x, point_y, way_pos[-1].x(), way_pos[-1].y(), block_end_x, block_start_y, block_end_x, block_end_y))
+    pos.append(nearestPointLine(way_pos[0], QPoint(bl_start_x, bl_end_y), QPoint(bl_end_x, bl_end_y)))
+    pos.append(nearestPointLine(way_pos[0], QPoint(bl_end_x, bl_start_y), QPoint(bl_end_x, bl_end_y)))
+    pos.append(nearestPointLine(way_pos[-1], QPoint(bl_start_x, bl_end_y), QPoint(bl_end_x, bl_end_y)))
+    pos.append(nearestPointLine(way_pos[-1], QPoint(bl_end_x, bl_start_y), QPoint(bl_end_x, bl_end_y)))
 
     dis = []
     for p in pos:
-        dis.append(math.hypot(p.x() - point_x, p.y() - point_y))
+        dis.append(math.hypot(p.x() - pos_x, p.y() - pos_y))
 
     pos_dis = [pos[0], dis[0]]
     for i in range(len(pos) - 1):
@@ -91,3 +117,38 @@ def nearestBlockArrow(block_start_x, block_start_y, block_end_x, block_end_y, wa
             pos_dis = [pos[i + 1], dis[i + 1]]
 
     return pos_dis
+
+def nearObjPosDis(pos, all_obj):
+    pos_all = []
+    dis_all = []
+    obj_all = []
+
+    # カーソルとBlockの最短位置と距離
+    for o in all_obj:
+        if type(o) == block.Block:
+            [tmp_pos, tmp_dis] = nearestPointBlock(pos, o.start_pos, o.end_pos)
+        elif type(o) == arrow.Arrow:
+            [tmp_pos, tmp_dis] = nearestPointArrow(pos, o.way_pos)
+        pos_all.append(tmp_pos)
+        dis_all.append(tmp_dis)
+        obj_all.append(o)
+
+    if pos_all == []: # 既存のオブジェクトが無い
+        # self.setEndPoint(mouse_pos)
+        return []
+
+    # 距離が最小の時のdis, pos, objを求める
+    min_dis = min(dis_all)
+    min_pos = pos_all[dis_all.index(min_dis)]
+    min_obj = obj_all[dis_all.index(min_dis)]
+
+    for o in all_obj:
+        # まずは全部青でなくする
+        o.setFrameBlue(False)
+    if min_dis < 6: # 距離が十分近かったら
+        # そのオブジェクトを青にして選択する
+        min_obj.setFrameBlue(True)
+
+        return [min_dis, min_pos, min_obj]
+    else:
+        return []
