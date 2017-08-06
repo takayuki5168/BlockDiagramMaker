@@ -26,7 +26,6 @@ class Event:
                 self.selected_block_id = len(widget.block_manager.block_list)
                 widget.block_manager.push(widget, pos)
                 print('No.' + str(self.selected_block_id) + ' Block has been born')
-            #elif self.selected_block_id != -1 and self.block_pos_dis != []: # オブジェクトを終点とする
         elif widget.operate_mode == 'Arrow':
             if self.selected_arrow_id == -1:
                 # create new Arrow
@@ -35,12 +34,9 @@ class Event:
                 print('No.' + str(self.selected_arrow_id) + ' Arrow has been born')
             else:
                 ar = widget.arrow_manager.arrow_list[self.selected_arrow_id]
-                if ar.near_obj_pos_dis != []:
-                    # そのオブジェクトを終端とする
-                    ar.removeLatestPoint()
-                    ar.setWayPoint(ar.near_obj_pos_dis[1])
+                if ar.near_obj_pos_dis[0] != None:
+                    self.selected_arrow_id = -1
                 else:
-                    # マウスを終端とする
                     ar.setPoint(pos)
 
     def mouseMove(self, mouse_event, widget):
@@ -53,11 +49,13 @@ class Event:
                 ar = widget.arrow_manager.arrow_list[self.selected_arrow_id]
                 # 自分以外のArrow + Block
                 all_obj = widget.arrow_manager.arrow_list[:self.selected_arrow_id] + widget.arrow_manager.arrow_list[self.selected_arrow_id + 1:] + widget.block_manager.block_list
+
+                # TODO posをカーソルの位置ではなく矢印の終端にする
                 near_obj_pos_dis = math_util.nearObjPosDis(pos, all_obj)
                 if near_obj_pos_dis != []:
-                    ar.setWayPoint(near_obj_pos_dis[1])
+                    ar.setWayPoint(near_obj_pos_dis)
                 else:
-                    ar.setWayPoint(pos)
+                    ar.setWayPoint([None, pos, None])
             else:
                 all_obj = widget.arrow_manager.arrow_list + widget.block_manager.block_list
                 near_obj_pos_dis = math_util.nearObjPosDis(pos, all_obj)

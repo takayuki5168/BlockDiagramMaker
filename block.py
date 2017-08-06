@@ -42,11 +42,20 @@ class Block:
         self.end_pos = pos
 
     def showFormula(self, widget):
-        self.nume, ok = QInputDialog.getText(widget, 'Input Diagram', 'Input Numerator(分母):')
-        self.deno, ok = QInputDialog.getText(widget, 'Input Diagram', 'Input Denominator(分子):')
-        while self.deno == '':
-            self.deno, ok = QInputDialog.getText(widget, 'Input Diagram', 'Input Denominator(分子):')
+        self.nume, is_ok = QInputDialog.getText(widget, 'Input Diagram', 'Input Numerator(分母):')
+        if is_ok == False:
+            self.mode = -1
+            return
+        self.deno, is_ok = QInputDialog.getText(widget, 'Input Diagram', 'Input Denominator(分子):')
+        if is_ok == False:
+            self.mode = -1
+            return
 
+        while self.deno == '':
+            self.deno, is_ok = QInputDialog.getText(widget, 'Input Diagram', 'Input Denominator(分子):')
+            if is_ok == False:
+                self.mode = -1
+                return
 
         if self.nume == '':
             self.label_deno = QLabel(self.deno, widget)
@@ -84,6 +93,7 @@ class Block:
         # 伝達関数の表示
         if self.label_nume != None:
             self.label_nume.show()
+            canvas.setPen(QColor(0, 0, 0))
             canvas.drawLine(self.start_pos.x() + 5, 0.5 * self.start_pos.y() + 0.5 * self.end_pos.y(),
                     self.end_pos.x() - 5, 0.5 * self.start_pos.y() + 0.5 * self.end_pos.y())
         if self.label_deno != None:

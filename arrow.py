@@ -27,7 +27,7 @@ class Arrow:
 
     def __init__(self, obj_pos_dis):
         self.pos = [obj_pos_dis[1]] # すでに定まっている点群
-        self.way_pos = [self.pos] # 選択途中の点群
+        self.way_pos = self.pos # 選択途中の点群
 
         self.frame_blue = False # 枠を青くするかどうか
 
@@ -36,7 +36,10 @@ class Arrow:
         self.near_obj_pos_dis = [] # Arrowの終点とあるオブジェクトの最短位置、距離
         self.selected_obj = -1 # Arrowが選択しているオブジェクト
 
-    def setWayPoint(self, pos):
+    def setWayPoint(self, near_obj_pos_dis):
+        self.near_obj_pos_dis = near_obj_pos_dis
+        pos = self.near_obj_pos_dis[1]
+        
         past_pos = self.pos[-1]
         pos_diff = past_pos - pos
         if abs(pos_diff.x()) > abs(pos_diff.y()):
@@ -78,6 +81,7 @@ class Arrow:
         else:
             canvas.setPen(QColor(0, 0, 255))
         for i in range(len(self.way_pos) - 1):
+
             canvas.drawLine(self.way_pos[i], self.way_pos[i + 1])
 
     def setFrameBlue(self, blue_or_not):

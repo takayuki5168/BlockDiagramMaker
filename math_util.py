@@ -145,7 +145,7 @@ def nearObjPosDis(pos, all_obj):
     for o in all_obj:
         # まずは全部青でなくする
         o.setFrameBlue(False)
-    if min_dis < 6: # 距離が十分近かったら
+    if min_dis < 10: # 距離が十分近かったら
         # そのオブジェクトを青にして選択する
         min_obj.setFrameBlue(True)
 
