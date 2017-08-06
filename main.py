@@ -14,12 +14,10 @@ class MyWidget(QWidget):
     def __init__(self):
         super().__init__()
         signal.signal(signal.SIGINT, self.sigIntHandler)
-
         init.init(self)
-
         self.setMouseTracking(True)
+        self.mode = 'None'
 
-        self.mode = 'None' #'Cursor'
         self.show()
 
     def mousePressEvent(self, mouse_event):

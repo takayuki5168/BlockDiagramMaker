@@ -10,7 +10,7 @@ import event
 class ArrowManager:
 
     def __init__(self):
-        self.arrow_list = []
+        self.arrow_list = [] # Arrowを管理するリスト
 
     def push(self, widget):
         arrow = Arrow()
@@ -23,10 +23,10 @@ class ArrowManager:
 class Arrow:
 
     def __init__(self):
-        self.pos = []
+        self.pos = [] # すでに定まっている点群
         self.way_pos = [] # 選択途中の点群
 
-        self.frame_blue = False # カーソルの選択範囲に入っているか
+        self.frame_blue = False
 
     def setWayPoint(self, pos):
         if self.pos == []:
@@ -54,6 +54,9 @@ class Arrow:
         self.way_pos = self.way_pos[:-1]
 
     def paint(self, widget, canvas):
+        if not self.is_alive:
+            return
+
         if self.frame_blue == False:
             canvas.setPen(QColor(0, 0, 0))
         else:

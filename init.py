@@ -14,7 +14,7 @@ def initUI(widget):
     initBlock(widget)
     initArrow(widget)
 
-    #textbox = QLineEdit()
+    #textbox = QLineEdit(widget)
     #textbox.move(100,100)
     #textbox.resize(140,20)
     #textbox.resize(180,20)
@@ -22,6 +22,7 @@ def initUI(widget):
 
     widget.setGeometry(300, 300, 640, 480)
     widget.setWindowTitle('BlockDiagramMaker')
+
 
 def initButton(widget):
     widget.button_manager = button.ButtonManager()
@@ -34,8 +35,6 @@ def initButton(widget):
     widget.button_manager.push('Save', widget, 460, 10, widget.setMode)
     widget.button_manager.push('Exit', widget, 550, 10, widget.close)
 
-    #widget.button_manager.button_list.list[0].button.setChecked(True)
-
 def initBlock(widget):
     widget.block_manager = block.BlockManager()
 
@@ -45,7 +44,7 @@ def initArrow(widget):
 def initTimer(widget):
     widget.timer = QTimer(widget)
     widget.timer.timeout.connect(widget.update)
-    widget.timer.start(10)#一秒間隔で更新
+    widget.timer.start(10) # 10ms間隔で更新
 
 def initEvent(widget):
     widget.event = event.Event()
