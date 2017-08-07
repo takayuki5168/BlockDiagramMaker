@@ -6,6 +6,11 @@ from PyQt5.QtCore import QPoint
 
 import block, arrow
 
+# 点と点
+def nearestPointPoint(po1_pos, po2_pos):
+    po = po1_pos - po2_pos
+    return math.hypot(po.x(), po.y())
+
 # 点と直線
 def nearestPointLine(po_pos, line_start, line_end):
     po_x = po_pos.x()
@@ -21,7 +26,7 @@ def nearestPointLine(po_pos, line_start, line_end):
 
         if large_y <= po_y:
             return QPoint(li_start_x, large_y)
-        elif large_y > po_y or small_y < po_y:
+        elif large_y > po_y and small_y < po_y:
             return QPoint(li_start_x, po_y)
         else:
             return QPoint(li_start_x, small_y)
@@ -32,7 +37,7 @@ def nearestPointLine(po_pos, line_start, line_end):
 
         if large_x <= po_x:
             return QPoint(large_x, li_start_y)
-        elif large_x > po_x or small_x < po_x:
+        elif large_x > po_x and small_x < po_x:
             return QPoint(po_x, li_start_y)
         else:
             return QPoint(small_x, li_start_y)
@@ -66,8 +71,8 @@ def nearestPointBlock(point_pos, block_start, block_end):
 
 # 点と矢印
 def nearestPointArrow(point_pos, arrow_way_pos):
-    pos_x = point_pos.x()
-    pos_y = point_pos.y()
+    po_x = point_pos.x()
+    po_y = point_pos.y()
 
     if arrow_way_pos == []:
         return [None, None]
@@ -81,7 +86,7 @@ def nearestPointArrow(point_pos, arrow_way_pos):
 
     dis = []
     for p in pos:
-        dis.append(math.hypot(p.x() - pos_x, p.y() - pos_y))
+        dis.append(math.hypot(p.x() - po_x, p.y() - po_y))
 
     pos_dis = [pos[0], dis[0]]
     for i in range(len(pos) - 1):
@@ -142,6 +147,7 @@ def nearObjPosDis(pos, all_obj):
     min_pos = pos_all[dis_all.index(min_dis)]
     min_obj = obj_all[dis_all.index(min_dis)]
 
+
     for o in all_obj:
         # まずは全部青でなくする
         o.setFrameBlue(False)
@@ -149,6 +155,6 @@ def nearObjPosDis(pos, all_obj):
         # そのオブジェクトを青にして選択する
         min_obj.setFrameBlue(True)
 
-        return [min_dis, min_pos, min_obj]
+        return [min_obj, min_pos, min_dis]
     else:
         return []

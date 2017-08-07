@@ -1,3 +1,40 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+class Complex:
+
+    # 係数で初期化
+    def __init__(self, coef):
+        self.coef = coef
+
+    # ゼロ点で初期化
+    def __init__(self, zero):
+        self.zero = zero
+
+    def transCoefToZero:
+        self.zero = self.coef
+        self.zero = self.coef
+
+    def transZeroToCoef:
+        self.coef = self.zero
+        self.coef = self.zero
+
+    def reduceWhenZero(self):
+        for i in self.zero:
+            if i in self.zero:
+                index = self.zero.index(i)
+                self.zero.pop(i)
+                self.zero.pop(i)
+
+    def reduceWhenCoef(self):
+        self.transCoefToZero
+        self.reduceWhenZero
+
+    #def __add__(self, other):
+    #def __sub__(self, other):
+    #def __mul__(self, other):
+    #def __div__(self, other):
+
 class ComplexFraction:
 
     def __init__(self, deno_coef, nume_coef):

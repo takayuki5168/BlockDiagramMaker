@@ -11,7 +11,7 @@ import event
 class BlockManager:
 
     def __init__(self):
-        self.block_list = [] # Blockを管理するリスト
+        self.block_list = [] # List of managing Block
 
     def push(self, widget, pos):
         block = Block(pos)
@@ -33,7 +33,7 @@ class Block:
         self.label_nume = None # 分母の式ラベル
         self.label_deno = None # 分子の式ラベル
 
-        self.mode = 0 # -1:死 0:選択途中 1:選択終了 
+        self.mode = 0 # -1:死 0:選択開始(選択途中) 1:選択途中
 
         self.near_obj_pos_dis = [] # Blockの二辺とあるオブジェクトとその最短位置、距離
         self.selected_obj = -1 # Blockが選択しているオブジェクト
@@ -90,9 +90,9 @@ class Block:
             return
 
         if self.frame_blue == False:
-            canvas.setPen(QPen(QColor(0, 0, 0), 3))
+            canvas.setPen(QPen(QColor(0, 0, 0), 2))
         else:
-            canvas.setPen(QPen(QColor(0, 0, 255), 3))
+            canvas.setPen(QPen(QColor(0, 0, 255), 2))
         canvas.setBrush(QColor(200, 200, 200))
         canvas.drawRect(self.start_pos.x(), self.start_pos.y(), self.end_pos.x() - self.start_pos.x(), self.end_pos.y() - self.start_pos.y());
 

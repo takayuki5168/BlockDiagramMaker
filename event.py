@@ -26,6 +26,12 @@ class Event:
                 self.selected_block_id = len(widget.block_manager.block_list)
                 widget.block_manager.push(widget, pos)
                 print('No.' + str(self.selected_block_id) + ' Block has been born')
+                widget.block_manager.block_list[self.selected_block_id].mode = 0
+            else:
+                if widget.block_manager.block_list[self.selected_block_id].mode == 0:
+                    bl.showFormula(widget)
+                    self.selected_block_id = -1
+                    
         elif widget.operate_mode == 'Arrow':
             if self.selected_arrow_id == -1:
                 # create new Arrow
@@ -47,7 +53,7 @@ class Event:
         if widget.operate_mode == 'Arrow':
             if self.selected_arrow_id != -1:
                 ar = widget.arrow_manager.arrow_list[self.selected_arrow_id]
-                # 自分以外のArrow + Block
+                # judge with Arrow without myself and Block
                 all_obj = widget.arrow_manager.arrow_list[:self.selected_arrow_id] + widget.arrow_manager.arrow_list[self.selected_arrow_id + 1:] + widget.block_manager.block_list
 
                 # TODO posをカーソルの位置ではなく矢印の終端にする
@@ -66,33 +72,21 @@ class Event:
         elif widget.operate_mode == 'Block':
             if self.selected_block_id != -1:
                 bl = widget.block_manager.block_list[self.selected_block_id]
+                dis = math_util.nearestPointPoint(pos, bl.start_pos)
+                if dis > 10:
+                    bl.mode = 1
 
-                # judge only with Arrow
-                all_obj = widget.arrow_manager.arrow_list
-                near_obj_pos_dis = math_util.nearObjPosDis(pos, all_obj)
-                if near_obj_pos_dis == []:
-                    bl.setEndPoint(pos)
-                else:
-                    bl.setEndPoint(near_obj_pos_dis[1])
+                bl.setEndPoint(pos)
 
-        #if widget.operate_mode == 'Cursor':
-        #    for o in obj_all:
-        #        o.setFrameBlue(False)
-        #    if min_dis < 6: # そのオブジェクトを選択する
-        #        min_obj.setFrameBlue(True)
-        #        self.arrow_pos_dis = [min_pos, min_dis]
-        #        self.cursor_near_obj = o
-        #    else:
-        #        self.arrow_pos_dis = []
-        #        self.cursor_near_obj = -1
-                    
     def mouseRelease(self, mouse_event, widget):
         pos = mouse_event.pos()
 
         if widget.operate_mode == 'Block':
             if self.selected_block_id != -1:
-                widget.block_manager.block_list[self.selected_block_id].showFormula(widget)
-            self.selected_block_id = -1
+                bl = widget.block_manager.block_list[self.selected_block_id]
+                if bl.mode == 1:
+                    bl.showFormula(widget)
+                    self.selected_block_id = -1
 
     def keyPress(self, key_event, widget):
         if key_event.key() == Qt.Key_Escape:

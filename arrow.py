@@ -8,7 +8,7 @@ from PyQt5.QtCore import QPoint
 class ArrowManager:
 
     def __init__(self):
-        self.arrow_list = [] # Arrowを管理するリスト
+        self.arrow_list = [] # List of managing Arrow
 
         self.selected_obj_pos_dis = [] # Arrowモードで選択しているオブジェクト
 
@@ -61,25 +61,15 @@ class Arrow:
     def removeLatestPoint(self):
         self.way_pos = self.way_pos[:-1]
 
-        #for o in all_obj:
-        #    # まずは全部青でなくする
-        #    o.setFrameBlue(False)
-        #if min_dis < 6: # 距離が十分近かったら
-        #    # そのオブジェクトを青にして選択する
-        #    min_obj.setFrameBlue(True)
-        #else:
-        #    self.near_obj_pos_dis = []
-
-        #self.setWayPoint(pos)
-
     def paint(self, widget, canvas):
         if self.mode == -1:
             return
 
+        # Line
         if self.frame_blue == False:
-            canvas.setPen(QPen(QColor(0, 0, 0), 3))
+            canvas.setPen(QPen(QColor(0, 0, 0), 2))
         else:
-            canvas.setPen(QPen(QColor(0, 0, 255), 3))
+            canvas.setPen(QPen(QColor(0, 0, 255), 2))
         for i in range(len(self.way_pos) - 1):
             canvas.drawLine(self.way_pos[i], self.way_pos[i + 1])
 
@@ -108,7 +98,6 @@ class Arrow:
             p.append(QPoint(self.way_pos[-1].x() - direct_sgn * 10, self.way_pos[-1].y() + 6))
             for i in range(len(p) - 1):
                 canvas.drawLine(p[i], p[i + 1])
-
 
     def setFrameBlue(self, blue_or_not):
         if blue_or_not:
