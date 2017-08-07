@@ -77,12 +77,38 @@ class Arrow:
             return
 
         if self.frame_blue == False:
-            canvas.setPen(QColor(0, 0, 0))
+            canvas.setPen(QPen(QColor(0, 0, 0), 3))
         else:
-            canvas.setPen(QColor(0, 0, 255))
+            canvas.setPen(QPen(QColor(0, 0, 255), 3))
         for i in range(len(self.way_pos) - 1):
-
             canvas.drawLine(self.way_pos[i], self.way_pos[i + 1])
+
+        # triangle
+        if len(self.way_pos) == 1:
+            return
+        if self.way_pos[-1].x() == self.way_pos[-2].x():
+            # calc direct
+            direct = self.way_pos[-1].y() - self.way_pos[-2].y()
+            if direct == 0:
+                direct_sgn = 0
+            else:
+                direct_sgn = direct / abs(direct)
+            p = []
+            p.append(QPoint(self.way_pos[-1].x() - 6, self.way_pos[-1].y() - direct_sgn * 10))
+            p.append(QPoint(self.way_pos[-1].x(), self.way_pos[-1].y() - direct_sgn * 1))
+            p.append(QPoint(self.way_pos[-1].x() + 6, self.way_pos[-1].y() - direct_sgn * 10))
+            for i in range(len(p) - 1):
+                canvas.drawLine(p[i], p[i + 1])
+        else:
+            direct = self.way_pos[-1].x() - self.way_pos[-2].x()
+            direct_sgn = direct / abs(direct)
+            p = []
+            p.append(QPoint(self.way_pos[-1].x() - direct_sgn * 10, self.way_pos[-1].y() - 6))
+            p.append(QPoint(self.way_pos[-1].x() - direct_sgn * 1, self.way_pos[-1].y()))
+            p.append(QPoint(self.way_pos[-1].x() - direct_sgn * 10, self.way_pos[-1].y() + 6))
+            for i in range(len(p) - 1):
+                canvas.drawLine(p[i], p[i + 1])
+
 
     def setFrameBlue(self, blue_or_not):
         if blue_or_not:

@@ -57,14 +57,20 @@ class Block:
                 self.mode = -1
                 return
 
+        font = QFont()
+        font.setPointSize(20)
         if self.nume == '':
             self.label_deno = QLabel(self.deno, widget)
             self.label_deno.move(self.start_pos.x(), self.start_pos.y())
+            self.label_deno.setFont(font)
         else:
             self.label_nume = QLabel(self.nume, widget)
             self.label_deno = QLabel(self.deno, widget)
             self.label_nume.move(self.start_pos.x(),  0.5 * self.start_pos.y() + 0.5 * self.end_pos.y())
             self.label_deno.move(self.start_pos.x(), self.start_pos.y())
+
+            self.label_nume.setFont(font)
+            self.label_deno.setFont(font)
 
 #    def nearObjPosDis(self, mouse_pos, all_obj):
 #
@@ -84,16 +90,16 @@ class Block:
             return
 
         if self.frame_blue == False:
-            canvas.setPen(QColor(0, 0, 0))
+            canvas.setPen(QPen(QColor(0, 0, 0), 3))
         else:
-            canvas.setPen(QColor(0, 0, 255))
+            canvas.setPen(QPen(QColor(0, 0, 255), 3))
         canvas.setBrush(QColor(200, 200, 200))
         canvas.drawRect(self.start_pos.x(), self.start_pos.y(), self.end_pos.x() - self.start_pos.x(), self.end_pos.y() - self.start_pos.y());
 
         # 伝達関数の表示
         if self.label_nume != None:
             self.label_nume.show()
-            canvas.setPen(QColor(0, 0, 0))
+            canvas.setPen(QPen(QColor(0, 0, 0), 2))
             canvas.drawLine(self.start_pos.x() + 5, 0.5 * self.start_pos.y() + 0.5 * self.end_pos.y(),
                     self.end_pos.x() - 5, 0.5 * self.start_pos.y() + 0.5 * self.end_pos.y())
         if self.label_deno != None:
