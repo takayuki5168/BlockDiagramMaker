@@ -74,7 +74,7 @@ def nearestPointArrow(point_pos, arrow_way_pos):
     po_x = point_pos.x()
     po_y = point_pos.y()
 
-    if arrow_way_pos == []:
+    if len(arrow_way_pos) == 1:
         return [None, None]
 
     pos = []

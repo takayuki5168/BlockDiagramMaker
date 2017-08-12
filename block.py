@@ -59,18 +59,37 @@ class Block:
 
         font = QFont()
         font.setPointSize(20)
+
+
         if self.nume == '':
             self.label_deno = QLabel(self.deno, widget)
-            self.label_deno.move(self.start_pos.x(), self.start_pos.y())
+
+            deno_width = self.label_deno.fontMetrics().boundingRect(self.label_deno.text()).width()
+            deno_height = self.label_deno.fontMetrics().boundingRect(self.label_deno.text()).height()
+
+            self.label_deno.move((self.start_pos.x() + self.end_pos.x()) / 2.0 - deno_width,
+                    self.start_pos.y())
             self.label_deno.setFont(font)
+            
+            print(deno_width)
+            print(deno_height)
         else:
             self.label_nume = QLabel(self.nume, widget)
             self.label_deno = QLabel(self.deno, widget)
-            self.label_nume.move(self.start_pos.x(),  0.5 * self.start_pos.y() + 0.5 * self.end_pos.y())
-            self.label_deno.move(self.start_pos.x(), self.start_pos.y())
+
+            nume_width = self.label_nume.fontMetrics().boundingRect(self.label_nume.text()).width()
+            nume_height = self.label_nume.fontMetrics().boundingRect(self.label_nume.text()).height()
+            deno_width = self.label_deno.fontMetrics().boundingRect(self.label_deno.text()).width()
+            deno_height = self.label_deno.fontMetrics().boundingRect(self.label_deno.text()).height()
+
+            self.label_nume.move((self.start_pos.x() + self.end_pos.x()) / 2.0 - nume_width,
+                    (self.start_pos.y() + self.end_pos.y()) / 2.0)
+            self.label_deno.move((self.start_pos.x() + self.end_pos.x()) / 2.0 - deno_width,
+                    (self.start_pos.y() + self.end_pos.y()) / 2.0 - deno_height - 20)
 
             self.label_nume.setFont(font)
             self.label_deno.setFont(font)
+            
 
 #    def nearObjPosDis(self, mouse_pos, all_obj):
 #
@@ -100,8 +119,8 @@ class Block:
         if self.label_nume != None:
             self.label_nume.show()
             canvas.setPen(QPen(QColor(0, 0, 0), 2))
-            canvas.drawLine(self.start_pos.x() + 5, 0.5 * self.start_pos.y() + 0.5 * self.end_pos.y(),
-                    self.end_pos.x() - 5, 0.5 * self.start_pos.y() + 0.5 * self.end_pos.y())
+            canvas.drawLine(self.start_pos.x() + 10, (self.start_pos.y() + self.end_pos.y()) / 2.0,
+                    self.end_pos.x() - 10, (self.start_pos.y() + self.end_pos.y()) / 2.0)
         if self.label_deno != None:
             self.label_deno.show()
 
