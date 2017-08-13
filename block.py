@@ -68,7 +68,7 @@ class Block:
             deno_height = self.label_deno.fontMetrics().boundingRect(self.label_deno.text()).height()
 
             self.label_deno.move((self.start_pos.x() + self.end_pos.x()) / 2.0 - deno_width,
-                    self.start_pos.y())
+                    (self.start_pos.y() + self.end_pos.y()) / 2.0 - deno_height / 2.0)
             self.label_deno.setFont(font)
             
             print(deno_width)
