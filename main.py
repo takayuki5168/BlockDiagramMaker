@@ -9,7 +9,7 @@ from PyQt5.QtGui import *
 
 import init, event, button, block, arrow
 
-class MyWidget(QWidget):
+class MyWidget(QMainWindow):#QWidget):
 
     def __init__(self):
         super().__init__()
@@ -37,6 +37,7 @@ class MyWidget(QWidget):
 
         self.block_manager.paint(self, canvas)
         self.arrow_manager.paint(self, canvas)
+        self.combine_manager.paint(self, canvas)
 
     def setOperateMode(self, toggled):
         source = self.sender()

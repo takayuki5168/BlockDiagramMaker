@@ -11,12 +11,11 @@ import event
 class BlockManager:
 
     def __init__(self):
-        self.block_list = [] # List of managing Block
+        self.block_list = [] # list of managing Block
 
     def push(self, widget, pos):
         block = Block(pos)
         self.block_list.append(block)
-
 
     def paint(self, widget, canvas):
         for b in self.block_list:

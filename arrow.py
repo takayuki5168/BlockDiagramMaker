@@ -8,7 +8,7 @@ from PyQt5.QtCore import QPoint
 class ArrowManager:
 
     def __init__(self):
-        self.arrow_list = [] # List of managing Arrow
+        self.arrow_list = [] # list of managing Arrow
 
         self.selected_obj_pos_dis = [] # Arrowモードで選択しているオブジェクト
 

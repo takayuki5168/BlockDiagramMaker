@@ -4,17 +4,24 @@ from PyQt5.QtWidgets import * #QWidget, QPushButton, QFrame, QApplication, QLine
 from PyQt5.QtGui import *
 from PyQt5.QtCore import QPoint
 
-import block, arrow
+import block, arrow, combine
 
 # 点と点
-def nearestPointPoint(po1_pos, po2_pos):
-    po = po1_pos - po2_pos
+def disPointPoint(point1_pos, point2_pos):
+    po = point1_pos - point2_pos
     return math.hypot(po.x(), po.y())
 
+# 点と円
+def nearestPointCircle(point_pos, circle_pos, radius):
+    dis = disPointPoint(point_pos, circle_pos)
+
+    po = circle_pos + (point_pos - circle_pos) * radius / dis
+    return po
+
 # 点と直線
-def nearestPointLine(po_pos, line_start, line_end):
-    po_x = po_pos.x()
-    po_y = po_pos.y()
+def nearestPointLine(point_pos, line_start, line_end):
+    po_x = point_pos.x()
+    po_y = point_pos.y()
     li_start_x = line_start.x()
     li_start_y = line_start.y()
     li_end_x = line_end.x()
@@ -123,6 +130,13 @@ def nearestBlockArrow(block_start, block_end, ar_way_pos):
 
     return pos_dis
 
+# 点と結合
+def nearestPointCombine(point_pos, combine_pos, radius):
+    pos = nearestPointCircle(point_pos, combine_pos, radius)
+    dis = disPointPoint(pos, point_pos)
+    pos_dis = [pos, dis]
+    return pos_dis
+
 def nearObjPosDis(pos, all_obj):
     pos_all = []
     dis_all = []
@@ -134,6 +148,8 @@ def nearObjPosDis(pos, all_obj):
             [tmp_pos, tmp_dis] = nearestPointBlock(pos, o.start_pos, o.end_pos)
         elif type(o) == arrow.Arrow:
             [tmp_pos, tmp_dis] = nearestPointArrow(pos, o.way_pos)
+        elif type(o) == combine.Combine:
+            [tmp_pos, tmp_dis] = nearestPointCombine(pos, o.pos, o.radius)
         pos_all.append(tmp_pos)
         dis_all.append(tmp_dis)
         obj_all.append(o)

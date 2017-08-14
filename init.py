@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import * #QWidget, QPushButton, QFrame, QApplication, QLine
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt, QTimer
 
-import button, event, block, arrow
+import menubar, button, event, block, arrow, combine
 
 def init(widget):
     initUI(widget)
@@ -10,36 +10,36 @@ def init(widget):
     initEvent(widget)
 
 def initUI(widget):
+    initMenubar(widget)
     initButton(widget)
     initBlock(widget)
     initArrow(widget)
-
-    #textbox = QLineEdit(widget)
-    #textbox.move(100,100)
-    #textbox.resize(140,20)
-    #textbox.resize(180,20)
-    #textbox.resize(200,20)
+    initCombine(widget)
 
     widget.setGeometry(300, 300, 640, 480)
     widget.setWindowTitle('BlockDiagramMaker')
 
+def initMenubar(widget):
+    widget.menu_manager = menubar.MenubarManager(widget)
+
+    widget.menu_manager.pushMenu('&File')
+    widget.menu_manager.pushAction(widget, 0, 'po.png', '&Exit', 'Ctrl+Q', 'Exit application', qApp.quit)
 
 def initButton(widget):
     widget.button_manager = button.ButtonManager()
 
-    widget.button_manager.push('Cursor', widget, 10, 10, widget.setOperateMode)
-    widget.button_manager.push('Block', widget, 100, 10, widget.setOperateMode)
-    widget.button_manager.push('Arrow', widget, 190, 10, widget.setOperateMode)
-    widget.button_manager.push('Remove', widget, 280, 10, widget.setOperateMode)
-    widget.button_manager.push('Undo', widget, 370, 10, widget.setOperateMode)
-    widget.button_manager.push('Save', widget, 460, 10, widget.setOperateMode)
-    widget.button_manager.push('Exit', widget, 550, 10, widget.close)
+    name = ['Cursor', 'Block', 'Arrow', 'Combine', 'Undo', 'Save', 'Exit']
+    for i in range(len(name)):
+        widget.button_manager.push(name[i], widget, 10 + i * 65, 30, widget.setOperateMode)
 
 def initBlock(widget):
     widget.block_manager = block.BlockManager()
 
 def initArrow(widget):
     widget.arrow_manager = arrow.ArrowManager()
+
+def initCombine(widget):
+    widget.combine_manager = combine.CombineManager()
 
 def initTimer(widget):
     widget.timer = QTimer(widget)

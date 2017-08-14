@@ -8,6 +8,7 @@ class Event:
     def __init__(self):
         self.selected_block_id = -1 # 選択しているblock_id
         self.selected_arrow_id = -1 # 選択しているarrow_id
+        self.selected_combine_id = -1 # 選択しているcombine_id
 
         self.cursor_near_obj = -1 # カーソル、Arrowの選択範囲可能のオブジェクト
         self.cursor_selected_obj = -1 # カーソル、Arrowが選択しているオブジェクト
@@ -45,6 +46,14 @@ class Event:
                 else:
                     ar.setPoint(pos)
 
+        elif widget.operate_mode == 'Combine':
+            if self.selected_combine_id == -1:
+                # create new Combine
+                self.selected_combine_id = len(widget.combine_manager.combine_list)
+                widget.combine_manager.push(widget, pos)
+                print('No.' + str(self.selected_combine_id) + ' Combine has been born')
+                self.selected_combine_id = -1
+
     def mouseMove(self, mouse_event, widget):
         pos = mouse_event.pos()
 
@@ -54,7 +63,7 @@ class Event:
             if self.selected_arrow_id != -1:
                 ar = widget.arrow_manager.arrow_list[self.selected_arrow_id]
                 # judge with Arrow without myself and Block
-                all_obj = widget.arrow_manager.arrow_list[:self.selected_arrow_id] + widget.arrow_manager.arrow_list[self.selected_arrow_id + 1:] + widget.block_manager.block_list
+                all_obj = widget.arrow_manager.arrow_list[:self.selected_arrow_id] + widget.arrow_manager.arrow_list[self.selected_arrow_id + 1:] + widget.block_manager.block_list + widget.combine_manager.combine_list
 
                 # TODO posをカーソルの位置ではなく矢印の終端にする
                 near_obj_pos_dis = math_util.nearObjPosDis(pos, all_obj)
@@ -63,7 +72,7 @@ class Event:
                 else:
                     ar.setWayPoint([None, pos, None])
             else:
-                all_obj = widget.arrow_manager.arrow_list + widget.block_manager.block_list
+                all_obj = widget.arrow_manager.arrow_list + widget.block_manager.block_list + widget.combine_manager.combine_list
                 near_obj_pos_dis = math_util.nearObjPosDis(pos, all_obj)
                 if near_obj_pos_dis != []:
                     widget.arrow_manager.updateObjPosDis(near_obj_pos_dis)
@@ -72,7 +81,7 @@ class Event:
         elif widget.operate_mode == 'Block':
             if self.selected_block_id != -1:
                 bl = widget.block_manager.block_list[self.selected_block_id]
-                dis = math_util.nearestPointPoint(pos, bl.start_pos)
+                dis = math_util.disPointPoint(pos, bl.start_pos)
                 if dis > 10:
                     bl.mode = 1
 
