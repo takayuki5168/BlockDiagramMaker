@@ -27,10 +27,13 @@ class ComplexPolynominal:
             self.transCoefToZero(a)
 
     def transCoefToZero(self, coef):
+        #if coef == []:
+        #    self.zero = []
+        #    self.first_coef = [1]
+        #    return
         f = Polynomial([x * -1 for x in coef])
         self.zero = f.roots()
         self.first_coef = coef[-1]
-
 
     def transZeroToCoef(self):
         coef = []
@@ -38,10 +41,9 @@ class ComplexPolynominal:
             c = mulZero([x * -1 for x in self.zero], i)
             coef.append(c)
         
-        print('Trans Zero to Coef {}'.format(coef))
+        #print('Trans Zero to Coef {}'.format(coef))
         return coef
             
-
     def __add__(self, other):
         self_coef = self.transZeroToCoef()
         other_coef = other.transZeroToCoef()
@@ -54,7 +56,7 @@ class ComplexPolynominal:
             if i < len(other_coef):
                 tmp += other_coef[i]
             added_coef.append(tmp)
-        print('added coef : {}'.format(added_coef))
+        #print('added coef : {}'.format(added_coef))
         return ComplexPolynominal(False, added_coef)
 
     def __sub__(self, other):
@@ -69,7 +71,7 @@ class ComplexPolynominal:
             if i < len(other_coef):
                 tmp -= other_coef[i]
             subbed_coef.append(tmp)
-        print('subbed coef : {}'.format(subbed_coef))
+        #print('subbed coef : {}'.format(subbed_coef))
         return ComplexPolynominal(False, subbed_coef)
 
     def __mul__(self, other):
@@ -87,10 +89,10 @@ class ComplexPolynominalFraction:
         elif init_mode == 2: # 分子分母の値で初期化
             self.deno = deno
             self.nume = nume
-        print('Initialize done')
-        print('first coef : {}'.format(self.nume.first_coef / self.deno.first_coef))
-        print('deno zero : {}'.format(self.deno.zero))
-        print('nume zero : {}'.format(self.nume.zero))
+        #print('Initialize done')
+        #print('first coef : {}'.format(self.nume.first_coef / self.deno.first_coef))
+        #print('deno zero : {}'.format(self.deno.zero))
+        #print('nume zero : {}'.format(self.nume.zero))
 
     def reduce(self):
         for i in self.deno_zero:
@@ -234,6 +236,10 @@ class ComplexPolynominalFraction:
         return ComplexPolynominalFraction(0, self.deno.zero + other.deno.zero, self.nume.zero + other.nume.zero, self.nume.first_coef * other.nume.first_coef / self.deno.first_coef / other.deno.first_coef)
 
     def __truediv__(self, other):
+        print(self.deno.first_coef)
+        print(self.deno.zero)
+        print(other.nume.first_coef)
+        print(other.nume.zero)
         return ComplexPolynominalFraction(0, self.deno.zero + other.nume.zero, self.nume.zero + other.deno.zero, self.nume.first_coef / self.deno.first_coef * other.deno.first_coef / other.nume.first_coef)
 
 
@@ -253,21 +259,25 @@ def solveEquation(mat):
         if mat[i][i] != 1:
              mat[i] = [x / mat[i][i] for x in mat[i]]
         for j in range(len(mat)):
-            #print(str(i) + ' ' + str(j))
             if i == j:
                 continue
             else: # mat[j][i]を0にする
                 if mat[j][i] != 0:
                     mat[j] = [mat[j][x] - mat[i][x] * mat[j][i] for x in range(len(mat[0]))]
-            #print(mat)
+            print(mat)
     return mat
+
+#ComplexPolynominalFraction(0, 1, 1)
+#ComplexPolynominalFraction(1, [1, 1], [1])
+
 
 def transComplex(mat):
     for i in range(len(mat[0])):
         for j in range(len(mat)):
-            mat[j][i] = ComplexPolynominalFraction(2, 1, mat[j][i])
+            mat[j][i] = ComplexPolynominalFraction(1, [1], [mat[j][i]])
+    return mat
 
 mat = [[2, -3, 1, 1], [1, 2, -3, 4], [3, 2, -1, 5]]
-#mat = transComplex(mat)
+mat = transComplex(mat)
 ans = solveEquation(mat)
 print(ans)
