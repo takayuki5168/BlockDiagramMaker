@@ -103,32 +103,32 @@ def nearestPointArrow(point_pos, arrow_way_pos):
     return pos_dis
 
 # ブロックと矢印
-def nearestBlockArrow(block_start, block_end, ar_way_pos):
-    bl_start_x = block_start.x()
-    bl_start_y = block_start.y()
-    bl_end_x = block_end.x()
-    bl_end_y = block_end.y()
-
-    if ar_way_pos == []:
-        return [None, None]
-    
-    pos = []
-
-    pos.append(nearestPointLine(way_pos[0], QPoint(bl_start_x, bl_end_y), QPoint(bl_end_x, bl_end_y)))
-    pos.append(nearestPointLine(way_pos[0], QPoint(bl_end_x, bl_start_y), QPoint(bl_end_x, bl_end_y)))
-    pos.append(nearestPointLine(way_pos[-1], QPoint(bl_start_x, bl_end_y), QPoint(bl_end_x, bl_end_y)))
-    pos.append(nearestPointLine(way_pos[-1], QPoint(bl_end_x, bl_start_y), QPoint(bl_end_x, bl_end_y)))
-
-    dis = []
-    for p in pos:
-        dis.append(math.hypot(p.x() - pos_x, p.y() - pos_y))
-
-    pos_dis = [pos[0], dis[0]]
-    for i in range(len(pos) - 1):
-        if pos_dis[1] > dis[i + 1]:
-            pos_dis = [pos[i + 1], dis[i + 1]]
-
-    return pos_dis
+#def nearestBlockArrow(block_start, block_end, ar_way_pos):
+#    bl_start_x = block_start.x()
+#    bl_start_y = block_start.y()
+#    bl_end_x = block_end.x()
+#    bl_end_y = block_end.y()
+#
+#    if ar_way_pos == []:
+#        return [None, None]
+#    
+#    pos = []
+#
+#    pos.append(nearestPointLine(way_pos[0], QPoint(bl_start_x, bl_end_y), QPoint(bl_end_x, bl_end_y)))
+#    pos.append(nearestPointLine(way_pos[0], QPoint(bl_end_x, bl_start_y), QPoint(bl_end_x, bl_end_y)))
+#    pos.append(nearestPointLine(way_pos[-1], QPoint(bl_start_x, bl_end_y), QPoint(bl_end_x, bl_end_y)))
+#    pos.append(nearestPointLine(way_pos[-1], QPoint(bl_end_x, bl_start_y), QPoint(bl_end_x, bl_end_y)))
+#
+#    dis = []
+#    for p in pos:
+#        dis.append(math.hypot(p.x() - pos_x, p.y() - pos_y))
+#
+#    pos_dis = [pos[0], dis[0]]
+#    for i in range(len(pos) - 1):
+#        if pos_dis[1] > dis[i + 1]:
+#            pos_dis = [pos[i + 1], dis[i + 1]]
+#
+#    return pos_dis
 
 # 点と結合
 def nearestPointCombine(point_pos, combine_pos, radius):
@@ -142,8 +142,10 @@ def nearObjPosDis(pos, all_obj):
     dis_all = []
     obj_all = []
 
-    # カーソルとBlockの最短位置と距離
+    # カーソルと各オブジェクトの最短位置と距離
     for o in all_obj:
+        if o.mode == -1:
+            continue
         if type(o) == block.Block:
             [tmp_pos, tmp_dis] = nearestPointBlock(pos, o.start_pos, o.end_pos)
         elif type(o) == arrow.Arrow:
@@ -156,7 +158,7 @@ def nearObjPosDis(pos, all_obj):
 
     if pos_all == []: # 既存のオブジェクトが無い
         # self.setEndPoint(mouse_pos)
-        return []
+        return [None, None, None]
 
     # 距離が最小の時のdis, pos, objを求める
     min_dis = min(dis_all)
@@ -173,4 +175,4 @@ def nearObjPosDis(pos, all_obj):
 
         return [min_obj, min_pos, min_dis]
     else:
-        return []
+        return [None, None, None]

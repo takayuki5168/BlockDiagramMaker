@@ -37,6 +37,9 @@ class Block:
         self.near_obj_pos_dis = [] # Blockの二辺とあるオブジェクトとその最短位置、距離
         self.selected_obj = -1 # Blockが選択しているオブジェクト
 
+        self.input = []
+        self.output = []
+
     def setEndPoint(self, pos):
         self.end_pos = pos
 
@@ -68,10 +71,10 @@ class Block:
 
             self.label_deno.move((self.start_pos.x() + self.end_pos.x()) / 2.0 - deno_width,
                     (self.start_pos.y() + self.end_pos.y()) / 2.0 - deno_height / 2.0)
+            self.label_deno.setFixedWidth(deno_width * 2)
             self.label_deno.setFont(font)
-            
-            print(deno_width)
-            print(deno_height)
+            #print(deno_width)
+            #print(deno_height)
         else:
             self.label_nume = QLabel(self.nume, widget)
             self.label_deno = QLabel(self.deno, widget)
@@ -86,9 +89,11 @@ class Block:
             self.label_deno.move((self.start_pos.x() + self.end_pos.x()) / 2.0 - deno_width,
                     (self.start_pos.y() + self.end_pos.y()) / 2.0 - deno_height - 20)
 
+            self.label_nume.setFixedWidth(nume_width * 2)
+            self.label_deno.setFixedWidth(deno_width * 2)
+
             self.label_nume.setFont(font)
             self.label_deno.setFont(font)
-            
 
 #    def nearObjPosDis(self, mouse_pos, all_obj):
 #

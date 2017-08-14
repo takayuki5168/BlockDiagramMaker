@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import * #QWidget, QPushButton, QFrame, QApplication, QLine
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
 
-import math_util
+import arrow, block, combine, math_util
 
 class Event:
     def __init__(self):
@@ -16,14 +16,8 @@ class Event:
     def mousePress(self, mouse_event, widget):
         pos = mouse_event.pos()
 
-        #if widget.operate_mode == 'Cursor':
-        #    if self.cursor_near_obj != -1:
-        #        self.cursor_selected_obj = self.cursor_near_obj
-        #        self.cursor_selected_obj.setFrameBlue(True)
-
         if widget.operate_mode == 'Block':
-            if self.selected_block_id == -1:
-                # create new Block
+            if self.selected_block_id == -1: # create new Block
                 self.selected_block_id = len(widget.block_manager.block_list)
                 widget.block_manager.push(widget, pos)
                 print('No.' + str(self.selected_block_id) + ' Block has been born')
@@ -34,14 +28,30 @@ class Event:
                     self.selected_block_id = -1
                     
         elif widget.operate_mode == 'Arrow':
-            if self.selected_arrow_id == -1:
-                # create new Arrow
+            if self.selected_arrow_id == -1: # create new Arrow
                 self.selected_arrow_id = len(widget.arrow_manager.arrow_list)
-                widget.arrow_manager.push(widget)
+
+                obj_pos_dis = widget.arrow_manager.selected_obj_pos_dis
+                if obj_pos_dis[0] != None: # 始点がオブジェクト
+                    if type(obj_pos_dis[0]) == arrow.Arrow: # 始点がArrowのとき
+                        widget.arrow_manager.push(widget, obj_pos_dis[0].num)
+                    elif type(obj_pos_dis[0]) == combine.Combine: # 始点がCombineのとき
+                        obj_pos_dis[0].output.append(self.selected_arrow_id)
+                        widget.arrow_manager.push(widget, self.selected_arrow_id)
+                    elif type(obj_pos_dis[0]) == block.Block: # 始点がBlockのとき
+                        obj_pos_dis[0].output.append(self.selected_arrow_id)
+                        widget.arrow_manager.push(widget, self.selected_arrow_id)
+                else:
+                    widget.arrow_manager.push(widget, self.selected_arrow_id)
                 print('No.' + str(self.selected_arrow_id) + ' Arrow has been born')
             else:
                 ar = widget.arrow_manager.arrow_list[self.selected_arrow_id]
-                if ar.near_obj_pos_dis[0] != None:
+                if ar.near_obj_pos_dis[0] != None: # 端点がオブジェクトであり終点
+                    obj = ar.near_obj_pos_dis[0]
+                    if type(obj) == combine.Combine:
+                        obj.input.append(ar.num)
+                    elif type(obj) == block.Block:
+                        obj.input.append(ar.num)
                     self.selected_arrow_id = -1
                 else:
                     ar.setPoint(pos)
@@ -62,22 +72,23 @@ class Event:
         if widget.operate_mode == 'Arrow':
             if self.selected_arrow_id != -1:
                 ar = widget.arrow_manager.arrow_list[self.selected_arrow_id]
-                # judge with Arrow without myself and Block
-                all_obj = widget.arrow_manager.arrow_list[:self.selected_arrow_id] + widget.arrow_manager.arrow_list[self.selected_arrow_id + 1:] + widget.block_manager.block_list + widget.combine_manager.combine_list
+                # judge with Block and Combine
+                all_obj = widget.block_manager.block_list + widget.combine_manager.combine_list
 
                 # TODO posをカーソルの位置ではなく矢印の終端にする
                 near_obj_pos_dis = math_util.nearObjPosDis(pos, all_obj)
-                if near_obj_pos_dis != []:
+                if near_obj_pos_dis[0] != None:
                     ar.setWayPoint(near_obj_pos_dis)
                 else:
                     ar.setWayPoint([None, pos, None])
             else:
                 all_obj = widget.arrow_manager.arrow_list + widget.block_manager.block_list + widget.combine_manager.combine_list
                 near_obj_pos_dis = math_util.nearObjPosDis(pos, all_obj)
-                if near_obj_pos_dis != []:
+                if near_obj_pos_dis[0] != None:
                     widget.arrow_manager.updateObjPosDis(near_obj_pos_dis)
                 else:
                     widget.arrow_manager.updateObjPosDis([None, pos, None])
+
         elif widget.operate_mode == 'Block':
             if self.selected_block_id != -1:
                 bl = widget.block_manager.block_list[self.selected_block_id]
@@ -101,5 +112,17 @@ class Event:
         if key_event.key() == Qt.Key_Escape:
             if widget.operate_mode == 'Arrow':
                 if self.selected_arrow_id != -1:
-                    widget.arrow_manager.arrow_list[self.selected_arrow_id].removeLatestPoint()
+                    ar = widget.arrow_manager.arrow_list[self.selected_arrow_id]
+                    ar.removeLatestPoint()
+                    if len(ar.pos) == 1:
+                        ar.mode = -1
                     self.selected_arrow_id = -1
+        if key_event.key() == Qt.Key_Delete:
+            print('Block')
+            for b in widget.block_manager.block_list:
+                print(b.input)
+                print(b.output)
+            print('Combine')
+            for c in widget.combine_manager.combine_list:
+                print(c.input)
+                print(c.output)

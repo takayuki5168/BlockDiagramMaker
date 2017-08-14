@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import * #QWidget, QPushButton, QFrame, QApplication, QLine
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt, QTimer
 
-import menubar, button, event, block, arrow, combine
+import menubar, button, event, block, arrow, combine, simulate
 
 def init(widget):
     initUI(widget)
@@ -15,6 +15,7 @@ def initUI(widget):
     initBlock(widget)
     initArrow(widget)
     initCombine(widget)
+    initSimulate(widget)
 
     widget.setGeometry(300, 300, 640, 480)
     widget.setWindowTitle('BlockDiagramMaker')
@@ -28,7 +29,7 @@ def initMenubar(widget):
 def initButton(widget):
     widget.button_manager = button.ButtonManager()
 
-    name = ['Cursor', 'Block', 'Arrow', 'Combine', 'Undo', 'Save', 'Exit']
+    name = ['Cursor', 'Block', 'Arrow', 'Combine', 'Undo', 'Simulate', 'Save', 'Exit']
     for i in range(len(name)):
         widget.button_manager.push(name[i], widget, 10 + i * 65, 30, widget.setOperateMode)
 
@@ -40,6 +41,9 @@ def initArrow(widget):
 
 def initCombine(widget):
     widget.combine_manager = combine.CombineManager()
+
+def initSimulate(widget):
+    widget.simulate = simulate.Simulate()
 
 def initTimer(widget):
     widget.timer = QTimer(widget)

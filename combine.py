@@ -35,6 +35,9 @@ class Combine:
         self.near_obj_pos_dis = [] # Blockの二辺とあるオブジェクトとその最短位置、距離
         self.selected_obj = -1 # Blockが選択しているオブジェクト
 
+        self.input = []
+        self.output = []
+
     def paint(self, widget, canvas):
         if self.mode == -1:
             return

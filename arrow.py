@@ -12,8 +12,8 @@ class ArrowManager:
 
         self.selected_obj_pos_dis = [] # Arrowモードで選択しているオブジェクト
 
-    def push(self, widget):
-        arrow = Arrow(self.selected_obj_pos_dis)
+    def push(self, widget, num):
+        arrow = Arrow(self.selected_obj_pos_dis, num)
         self.arrow_list.append(arrow)
 
     def paint(self, widget, canvas):
@@ -25,7 +25,7 @@ class ArrowManager:
 
 class Arrow:
 
-    def __init__(self, obj_pos_dis):
+    def __init__(self, obj_pos_dis, num):
         self.pos = [obj_pos_dis[1]] # すでに定まっている点群
         self.way_pos = self.pos # 選択途中の点群
 
@@ -35,6 +35,8 @@ class Arrow:
 
         self.near_obj_pos_dis = [] # Arrowの終点とあるオブジェクトの最短位置、距離
         self.selected_obj = -1 # Arrowが選択しているオブジェクト
+
+        self.num = num # ルンゲクッタの時に使う矢印のnum
 
     def setWayPoint(self, near_obj_pos_dis):
         self.near_obj_pos_dis = near_obj_pos_dis
