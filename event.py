@@ -24,6 +24,7 @@ class Event:
                 widget.block_manager.block_list[self.selected_block_id].mode = 0
             else:
                 if widget.block_manager.block_list[self.selected_block_id].mode == 0:
+                    bl = widget.block_manager.block_list[self.selected_block_id]
                     bl.showFormula(widget)
                     self.selected_block_id = -1
                     

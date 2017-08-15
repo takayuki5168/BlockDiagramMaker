@@ -44,14 +44,39 @@ class Block:
         self.end_pos = pos
 
     def showFormula(self, widget):
-        self.nume, is_ok = QInputDialog.getText(widget, 'Input Diagram', 'Input Numerator(分母):')
+        # 分母を入力
+        self.nume_coef, is_ok = QInputDialog.getText(widget, 'Input Diagram', 'Input Numerator(分母):')
         if is_ok == False:
             self.mode = -1
             return
-        self.deno, is_ok = QInputDialog.getText(widget, 'Input Diagram', 'Input Denominator(分子):')
+        self.nume_coef = self.nume_coef.split(' ')
+        while '' in self.nume_coef:
+            self.nume_coef.remove('')
+        self.nume = ''
+        for i in range(len(self.nume_coef)):
+            if i == len(self.nume_coef) - 1:
+                self.nume += self.nume_coef[i]
+            elif i == len(self.nume_coef) - 2:
+                self.nume += self.nume_coef[i] + 's + '
+            else:
+                self.nume += self.nume_coef[i] + 's^' + str(len(self.nume_coef) - 1 - i) + ' + '
+
+        # 分子を入力
+        self.deno_coef, is_ok = QInputDialog.getText(widget, 'Input Diagram', 'Input Denominator(分子):')
         if is_ok == False:
             self.mode = -1
             return
+        self.deno_coef = self.deno_coef.split(' ')
+        while '' in self.deno_coef:
+            self.deno_coef.remove('')
+        self.deno = ''
+        for i in range(len(self.deno_coef)):
+            if i == len(self.deno_coef) - 1:
+                self.deno += self.deno_coef[i]
+            elif i == len(self.deno_coef) - 2:
+                self.deno += self.deno_coef[i] + 's + '
+            else:
+                self.deno += self.deno_coef[i] + 's^' + str(len(self.deno_coef) - 1 - i) + ' + '
 
         while self.deno == '':
             self.deno, is_ok = QInputDialog.getText(widget, 'Input Diagram', 'Input Denominator(分子):')
@@ -62,8 +87,7 @@ class Block:
         font = QFont()
         font.setPointSize(20)
 
-
-        if self.nume == '':
+        if self.nume == '': # 分母のみのとき
             self.label_deno = QLabel(self.deno, widget)
 
             deno_width = self.label_deno.fontMetrics().boundingRect(self.label_deno.text()).width()
@@ -75,7 +99,7 @@ class Block:
             self.label_deno.setFont(font)
             #print(deno_width)
             #print(deno_height)
-        else:
+        else: # 分母もあるとき
             self.label_nume = QLabel(self.nume, widget)
             self.label_deno = QLabel(self.deno, widget)
 
@@ -95,19 +119,6 @@ class Block:
             self.label_nume.setFont(font)
             self.label_deno.setFont(font)
 
-#    def nearObjPosDis(self, mouse_pos, all_obj):
-#
-#        for o in all_obj:
-#            # まずは全部青でなくする
-#            o.setFrameBlue(False)
-#        if min_dis < 6: # 距離が十分近かったら
-#            # そのオブジェクトを青にして選択する
-#            min_obj.setFrameBlue(True)
-#            self.setEndPoint(min_pos)
-#        else:
-#            self.near_obj_pos_dis = []
-#            self.setEndPoint(mouse_pos)
-#
     def paint(self, widget, canvas):
         if self.mode == -1:
             return
