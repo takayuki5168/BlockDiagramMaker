@@ -46,6 +46,11 @@ class MyWidget(QMainWindow):#QWidget):
             self.button_manager.setButton(source.text())
             self.operate_mode = source.text()
 
+            if self.operate_mode == 'Simulate':
+                print('Simulate')
+                self.simulate.initArrowFunc(self)
+                self.simulate.updateArrowFunc(self)
+
     def sigIntHandler(self, signal, frame):
         print('call SigIntHandler')
         sys.exit(0)

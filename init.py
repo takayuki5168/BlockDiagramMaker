@@ -29,7 +29,7 @@ def initMenubar(widget):
 def initButton(widget):
     widget.button_manager = button.ButtonManager()
 
-    name = ['Cursor', 'Block', 'Arrow', 'Combine', 'Undo', 'Simulate', 'Save', 'Exit']
+    name = ['Cursor', 'Block', 'Arrow', 'Combine', 'Simulate', 'Exit']
     for i in range(len(name)):
         widget.button_manager.push(name[i], widget, 10 + i * 65, 30, widget.setOperateMode)
 
