@@ -28,14 +28,20 @@ def po(num_list):
         po.append(-num_list[len(num_list) - i - 2] / num_list[-1])
     return po
 
-def rungekutta(state, now_time, step_time, func):
-    k1 = func(state, now_time)
-    k2 = func(state + step_time / 2 * k1, now_time + step_time / 2)
-    k3 = func(state + step_time / 2 * k2, now_time + step_time / 2)
-    k4 = func(state + step_time * k3, now_time + step_time)
+def sumList(state, num, k):
+    sum_list = []
+    for i in range(len(state)):
+        sum_list.append(state[i] + k[i] * num)
+    return sum_list
 
-    state += step_time / 6 * (k1 + 2 * k2 + 2 * k3 + k4);
-    return state
+def rungekutta(state, now_time, step_time, all_arrow, func):
+    k1 = func(state, now_time, all_arrow)
+    k2 = func(sumList(state, step_time / 2, k1), now_time + step_time / 2, all_arrow)
+    k3 = func(sumList(state, step_time / 2, k2), now_time + step_time / 2, all_arrow)
+    k4 = func(sumList(state, step_time, k3), now_time + step_time, all_arrow)
+
+    po = sumList(state, step_time / 6, sumList(sumList(sumList(k1, 2, k2), 2, k3), 1, k4))
+    return po
 
 class Simulate:
 
@@ -49,19 +55,17 @@ class Simulate:
         self.arrow = [[], []]
         self.arrow_ = []
         self.func = []
+        self.rungekutta = [] # ルンゲクッタを使うときのみ値を持つ
         for i in range(len(widget.arrow_manager.arrow_list)):
             self.arrow[0].append(0)
             self.arrow[1].append([])
             self.func.append([])
-        print(self.arrow[0])
-        print(self.arrow[1])
-        print(self.func)
+            self.rungekutta.append([])
 
         # Block
         for b in widget.block_manager.block_list:
             n = b.nume_coef
             d = b.deno_coef
-            print('deno:{} nume:{}'.format(d, n))
 
             # self.arrow[1]のリスト要素確保
             if len(d) == 1:
@@ -79,7 +83,6 @@ class Simulate:
             else:
                 for i in range(len(d)):
                     self.func[int(b.output[0])].append([])
-            print(self.func)
 
             # 入力部
             self.func[0].append([])
@@ -96,10 +99,11 @@ class Simulate:
                 self.func[int(b.output[0])][1] = [False, lambda arrow, time : arrow[0][int(b.input[0])] / int(d[-1])]
             elif len(d) != 0:
                 for i in range(len(d) - 1):
-                    if i == len(d) - 1:
-                        self.func[int(b.output[0])][i + 1] = [True, lambda arrow, time : product(arrow[1][int(b.output[0])], po(d)) + arrow[0][int(b.input[0])]]
+                    if i == len(d) - 2:
+                        self.func[int(b.output[0])][i + 1] = [True, lambda arrow, time, all_arrow : product(arrow, po(d)) + all_arrow[0][int(b.input[0])]]
                     else:
-                        self.func[int(b.output[0])][i + 1] = [True, lambda arrow, time : arrow[1][int(b.output[0])][i + 1]]
+                        self.func[int(b.output[0])][i + 1] = [True, lambda arrow, time, all_arrow : arrow[i + 1]]
+                self.rungekutta[int(b.output[0])] = lambda arrow, time, all_arrow : [f[1](arrow, time, all_arrow) for f in self.func[int(b.output[0])][1:]]
 
         # Combine
         for c in widget.combine_manager.combine_list:
@@ -135,8 +139,8 @@ class Simulate:
                             else:
                                 print('e')
                                 print('{} {}'.format(i, k))
-                                self.arrow[1][i][k] = rungekutta(self.arrow[1][i][k], now_time, step_time, self.func[i][k][1])
-                                self.arrow[1][i][k] = rungekutta(self.arrow[1][i][k], now_time, step_time, self.func[i][k][1])
+                                #self.arrow[1][i][k] = rungekutta(self.arrow[1][i][k], now_time, step_time, self.func[i][k][1])
+                                self.arrow[1][i] = rungekutta(self.arrow[1][i][1:], now_time, step_time, self.arrow, self.rungekutta[i])
 
 
 
