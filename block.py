@@ -127,6 +127,10 @@ class Block:
 
     def paint(self, window, canvas):
         if self.mode == -1:
+            if type(self.label_deno) != type(None):
+                self.label_deno.clear()
+            if type(self.label_nume) != type(None):
+                self.label_nume.clear()
             return
 
         if self.is_blue == False:

@@ -49,6 +49,13 @@ class MyWindow(QMainWindow):
                 print('Simulate')
                 self.simulate.initArrowFunc(self)
                 self.simulate.updateArrowFunc(self)
+            elif self.operate_mode == 'Clear':
+                for b in self.block_manager.block_list:
+                    b.mode = -1
+                for a in self.arrow_manager.arrow_list:
+                    a.mode = -1
+                for c in self.combine_manager.combine_list:
+                    c.mode = -1
 
     def sigIntHandler(self, signal, frame):
         print('call SigIntHandler')

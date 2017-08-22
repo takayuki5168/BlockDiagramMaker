@@ -4,7 +4,6 @@
 import sys
 
 from PyQt5.QtGui import QPen, QColor
-#from PyQt5.QtCore import QPoint
 
 import event
 
