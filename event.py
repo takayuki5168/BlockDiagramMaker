@@ -151,11 +151,15 @@ class Event:
                         ar.mode = -1
                     self.latest_arrow_id = -1
         if key_event.key() == Qt.Key_Delete:
-            print('Block')
-            for b in w.block_manager.block_list:
-                print(b.input)
-                print(b.output)
-            print('Combine')
-            for c in w.combine_manager.combine_list:
-                print(c.input)
-                print(c.output)
+            obj = self.cursor_selected_obj_pos_dis[0]
+            if obj != None:
+                obj.mode = -1
+                self.cursor_selected_obj_pos_dis = [None, None, None]
+            #print('Block')
+            #for b in w.block_manager.block_list:
+            #    print(b.input)
+            #    print(b.output)
+            #print('Combine')
+            #for c in w.combine_manager.combine_list:
+            #    print(c.input)
+            #    print(c.output)
