@@ -153,6 +153,11 @@ class Block:
 
     def onRightClick(self, pos, widget):
         menu = QMenu(widget)
-        delete = QAction('Delete', widget)
-        menu.addAction(delete)
+        action = [(QAction('Analysis Bode', widget, triggered = lambda : widget.analysis.analysis(widget, self, 'bode'))),
+                QAction('Analysis RootLocus', widget, triggered = lambda : widget.analysis.analysis(widget, self, 'rlocus')),
+                QAction('Analysis Step Response', widget, triggered = lambda : widget.analysis.analysis(widget, self, 'step')),
+                QAction('Analysis Impulse Response', widget, triggered = lambda : widget.analysis.analysis(widget, self, 'impulse'))]
+
+        for a in action:
+            menu.addAction(a)
         menu.exec_(widget.mapToGlobal(widget.event.mouse_pos))

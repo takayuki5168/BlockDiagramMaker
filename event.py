@@ -13,14 +13,6 @@ class Event:
         self.cursor_near_obj = -1 # カーソル、Arrowの選択範囲可能のオブジェクト
         self.cursor_selected_obj = -1 # カーソル、Arrowが選択しているオブジェクト
 
-    #def onRightClick(self, widget):
-    #    if self.selected_block_id != -1:
-    #        widget.block_manager.block_list[self.selected_block_id].onRightClick(self.mouse_pos)
-    #    elif self.selected_arrow_id != -1:
-    #        widget.arrow_manager.arrow_list[self.selected_arrow_id].onRightClick(self.mouse_pos)
-    #    elif self.selected_combine_id != -1:
-    #        widget.combine_manager.combine_list[self.selected_combine_id].onRightClick(self.mouse_pos)
-
     def mousePress(self, mouse_event, widget):
         self.mouse_pos = mouse_event.pos()
 

@@ -2,13 +2,12 @@ from PyQt5.QtWidgets import * #QWidget, QPushButton, QFrame, QApplication, QLine
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt, QTimer
 
-import menubar, button, event, block, arrow, combine, simulate
+import menubar, button, event, block, arrow, combine, simulate, analysis
 
 def init(widget):
     initUI(widget)
     initTimer(widget)
     initEvent(widget)
-    #initContextMenu(widget)
 
     widget.setMouseTracking(True)
     widget.operate_mode = 'None'
@@ -20,6 +19,7 @@ def initUI(widget):
     initArrow(widget)
     initCombine(widget)
     initSimulate(widget)
+    initAnalysis(widget)
 
     widget.setGeometry(300, 300, 640, 480)
     widget.setWindowTitle('BlockDiagramMaker')
@@ -49,6 +49,9 @@ def initCombine(widget):
 def initSimulate(widget):
     widget.simulate = simulate.Simulate()
 
+def initAnalysis(widget):
+    widget.analysis = analysis.Analysis()
+
 def initTimer(widget):
     widget.timer = QTimer(widget)
     widget.timer.timeout.connect(widget.update)
@@ -56,7 +59,3 @@ def initTimer(widget):
 
 def initEvent(widget):
     widget.event = event.Event()
-
-def initContextMenu(widget):
-    widget.setContextMenuPolicy(Qt.CustomContextMenu)
-    widget.customContextMenuRequested.connect(lambda : widget.event.onRightClick(widget))
