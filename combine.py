@@ -12,13 +12,13 @@ class CombineManager:
     def __init__(self):
         self.combine_list = [] # list of managing Combine
 
-    def push(self, window, pos):
+    def push(self, w, pos):
         combine = Combine(pos)
         self.combine_list.append(combine)
 
-    def paint(self, window, canvas):
+    def paint(self, w, canvas):
         for c in self.combine_list:
-            c.paint(window, canvas)
+            c.paint(w, canvas)
 
 class Combine:
 
@@ -36,7 +36,7 @@ class Combine:
         self.input = []
         self.output = []
 
-    def paint(self, window, canvas):
+    def paint(self, w, canvas):
         if self.mode == -1:
             return
 

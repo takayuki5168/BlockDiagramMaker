@@ -11,7 +11,7 @@ class Analysis:
 
     #def __init__(self):
 
-    def analysis(self, window, block, which):
+    def analysis(self, w, block, which):
         nume = [int(n) for n in block.nume_coef]
         deno = [int(d) for d in block.deno_coef]
         nume.reverse()

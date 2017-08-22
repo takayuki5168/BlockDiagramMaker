@@ -50,20 +50,20 @@ class Simulate:
         self.end_time = 10
         self.step_time = 0.1
 
-    def initArrowFunc(self, window):
+    def initArrowFunc(self, w):
         # 矢印の値、ルンゲクッタの関数
         self.arrow = [[], []]
         self.arrow_ = []
         self.func = []
         self.rungekutta = [] # ルンゲクッタを使うときのみ値を持つ
-        for i in range(len(window.arrow_manager.arrow_list)):
+        for i in range(len(w.arrow_manager.arrow_list)):
             self.arrow[0].append(0)
             self.arrow[1].append([])
             self.func.append([])
             self.rungekutta.append([])
 
         # Block
-        for b in window.block_manager.block_list:
+        for b in w.block_manager.block_list:
             n = b.nume_coef
             d = b.deno_coef
 
@@ -106,14 +106,14 @@ class Simulate:
                 self.rungekutta[int(b.output[0])] = lambda arrow, time, all_arrow : [f[1](arrow, time, all_arrow) for f in self.func[int(b.output[0])][1:]]
 
         # Combine
-        for c in window.combine_manager.combine_list:
+        for c in w.combine_manager.combine_list:
             for o in c.output:
                 self.func[o][0] = [False, lambda arrow, time : addList(arrow, int(c.input[0]))]
         print('self.arrow[0] {}'.format(self.arrow[0]))
         print('self.arrow[1] {}'.format(self.arrow[1]))
         print('self.func {}'.format(self.func))
 
-    def updateArrowFunc(self, window):
+    def updateArrowFunc(self, w):
         now_time = 0
         step_time = 0.1
         end_time = 5

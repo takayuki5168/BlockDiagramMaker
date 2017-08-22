@@ -11,13 +11,13 @@ class ArrowManager:
 
         self.selected_obj_pos_dis = [] # Arrowモードで選択しているオブジェクト
 
-    def push(self, window, num):
+    def push(self, w, num):
         arrow = Arrow(self.selected_obj_pos_dis, num)
         self.arrow_list.append(arrow)
 
-    def paint(self, window, canvas):
+    def paint(self, w, canvas):
         for a in self.arrow_list:
-            a.paint(window, canvas)
+            a.paint(w, canvas)
 
     def updateObjPosDis(self, obj_pos_dis):
         self.selected_obj_pos_dis = obj_pos_dis
@@ -62,7 +62,7 @@ class Arrow:
     def removeLatestPoint(self):
         self.way_pos = self.way_pos[:-1]
 
-    def paint(self, window, canvas):
+    def paint(self, w, canvas):
         if self.mode == -1:
             return
 

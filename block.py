@@ -13,13 +13,13 @@ class BlockManager:
     def __init__(self):
         self.block_list = [] # list of managing Block
 
-    def push(self, window, pos):
+    def push(self, w, pos):
         block = Block(pos)
         self.block_list.append(block)
 
-    def paint(self, window, canvas):
+    def paint(self, w, canvas):
         for b in self.block_list:
-            b.paint(window, canvas)
+            b.paint(w, canvas)
 
     def whichBlue(self):
         for b in self.block_list:
@@ -49,9 +49,9 @@ class Block:
     def setEndPoint(self, pos):
         self.end_pos = pos
 
-    def showFormula(self, window):
+    def showFormula(self, w):
         # 分母を入力
-        self.deno_coef, is_ok = QInputDialog.getText(window, 'Input Diagram', 'Input denorator(分母):')
+        self.deno_coef, is_ok = QInputDialog.getText(w, 'Input Diagram', 'Input denorator(分母):')
         if is_ok == False:
             self.mode = -1
             return
@@ -68,7 +68,7 @@ class Block:
                 self.deno += self.deno_coef[i] + 's^' + str(len(self.deno_coef) - 1 - i) + ' + '
 
         # 分子を入力
-        self.nume_coef, is_ok = QInputDialog.getText(window, 'Input Diagram', 'Input numeminator(分子):')
+        self.nume_coef, is_ok = QInputDialog.getText(w, 'Input Diagram', 'Input numeminator(分子):')
         if is_ok == False:
             self.mode = -1
             return
@@ -85,7 +85,7 @@ class Block:
                 self.nume += self.nume_coef[i] + 's^' + str(len(self.nume_coef) - 1 - i) + ' + '
 
         while self.nume == '':
-            self.nume, is_ok = QInputDialog.getText(window, 'Input Diagram', 'Input numeminator(分子):')
+            self.nume, is_ok = QInputDialog.getText(w, 'Input Diagram', 'Input numeminator(分子):')
             if is_ok == False:
                 self.mode = -1
                 return
@@ -94,7 +94,7 @@ class Block:
         font.setPointSize(20)
 
         if self.deno == '': # 分母のみのとき
-            self.label_nume = QLabel(self.nume, window)
+            self.label_nume = QLabel(self.nume, w)
 
             nume_width = self.label_nume.fontMetrics().boundingRect(self.label_nume.text()).width()
             nume_height = self.label_nume.fontMetrics().boundingRect(self.label_nume.text()).height()
@@ -106,8 +106,8 @@ class Block:
             #print(nume_width)
             #print(nume_height)
         else: # 分母もあるとき
-            self.label_deno = QLabel(self.deno, window)
-            self.label_nume = QLabel(self.nume, window)
+            self.label_deno = QLabel(self.deno, w)
+            self.label_nume = QLabel(self.nume, w)
 
             deno_width = self.label_deno.fontMetrics().boundingRect(self.label_deno.text()).width()
             deno_height = self.label_deno.fontMetrics().boundingRect(self.label_deno.text()).height()
@@ -125,7 +125,7 @@ class Block:
             self.label_deno.setFont(font)
             self.label_nume.setFont(font)
 
-    def paint(self, window, canvas):
+    def paint(self, w, canvas):
         if self.mode == -1:
             if type(self.label_deno) != type(None):
                 self.label_deno.clear()
@@ -155,13 +155,13 @@ class Block:
         else:
             self.is_blue = False
 
-    def onRightClick(self, pos, window):
-        menu = QMenu(window)
-        action = [(QAction('Analysis Bode', window, triggered = lambda : window.analysis.analysis(window, self, 'bode'))),
-                QAction('Analysis RootLocus', window, triggered = lambda : window.analysis.analysis(window, self, 'rlocus')),
-                QAction('Analysis Step Response', window, triggered = lambda : window.analysis.analysis(window, self, 'step')),
-                QAction('Analysis Impulse Response', window, triggered = lambda : window.analysis.analysis(window, self, 'impulse'))]
+    def onRightClick(self, pos, w):
+        menu = QMenu(w)
+        action = [(QAction('Analysis Bode', w, triggered = lambda : w.analysis.analysis(w, self, 'bode'))),
+                QAction('Analysis RootLocus', w, triggered = lambda : w.analysis.analysis(w, self, 'rlocus')),
+                QAction('Analysis Step Response', w, triggered = lambda : w.analysis.analysis(w, self, 'step')),
+                QAction('Analysis Impulse Response', w, triggered = lambda : w.analysis.analysis(w, self, 'impulse'))]
 
         for a in action:
             menu.addAction(a)
-        menu.exec_(window.mapToGlobal(window.event.mouse_pos))
+        menu.exec_(w.mapToGlobal(w.event.mouse_pos))
