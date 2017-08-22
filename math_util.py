@@ -135,7 +135,7 @@ def nearestPointCombine(point_pos, combine_pos, radius):
     pos_dis = [pos, dis]
     return pos_dis
 
-def nearObjPosDis(pos, all_obj):
+def nearObjPosDis(pos, all_obj, is_blue):
     pos_all = []
     dis_all = []
     obj_all = []
@@ -166,11 +166,12 @@ def nearObjPosDis(pos, all_obj):
 
     for o in all_obj:
         # まずは全部青でなくする
-        o.setFrameBlue(False)
+        if is_blue == True:
+            o.setFrameBlue(False)
     if min_dis < 10: # 距離が十分近かったら
         # そのオブジェクトを青にして選択する
-        min_obj.setFrameBlue(True)
-
+        if is_blue == True:
+            min_obj.setFrameBlue(True)
         return [min_obj, min_pos, min_dis]
     else:
         return [None, None, None]

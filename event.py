@@ -10,8 +10,10 @@ class Event:
         self.latest_arrow_id = -1 # 作成中のarrow_id
         self.latest_combine_id = -1 # 作成中のcombine_id
 
-        self.cursor_near_obj_pos_dis = -1 # カーソル、Arrowの選択範囲可能のオブジェクト
-        self.cursor_selected_obj_pos_dis = -1 # カーソル、Arrowが選択しているオブジェクト
+        # カーソル、Arrowの選択範囲可能のオブジェクト
+        self.cursor_near_obj_pos_dis = [None, None, None] 
+        # カーソル、Arrowが選択しているオブジェクト
+        self.cursor_selected_obj_pos_dis = [None, None, None] 
 
     def mousePress(self, mouse_event, w):
         self.mouse_pos = mouse_event.pos()
@@ -24,10 +26,16 @@ class Event:
                 w.arrow_manager.arrow_list[self.latest_arrow_id].onRightClick(self.mouse_pos)
             elif self.latest_combine_id != -1:
                 w.combine_manager.combine_list[self.latest_combine_id].onRightClick(self.mouse_pos)
+
         if mouse_event.buttons() == Qt.LeftButton: # when LeftClick
             if w.operate_mode == 'Cursor':
                 if self.cursor_near_obj_pos_dis[0] != None:
-                    self.cursor_selected_obj_pos_dis = self.cursor_near_obj_pos_dis[0]
+                    self.cursor_selected_obj_pos_dis = self.cursor_near_obj_pos_dis
+                    self.cursor_selected_obj_pos_dis[0].setFrameBlue(True)
+                    print(self.cursor_selected_obj_pos_dis[0].is_blue)
+                else:
+                    self.cursor_selected_obj_pos_dis[0].setFrameBlue(False)
+                    self.cursor_selected_obj_pos_dis[0] = None
             elif w.operate_mode == 'Block':
                 if self.latest_block_id == -1: # create new Block
                     self.latest_block_id = len(w.block_manager.block_list)
@@ -82,26 +90,31 @@ class Event:
 
         if w.operate_mode == 'Cursor':
             all_obj = w.arrow_manager.arrow_list + w.block_manager.block_list + w.combine_manager.combine_list
-            near_obj_pos_dis = math_util.nearObjPosDis(self.mouse_pos, all_obj)
+            near_obj_pos_dis = math_util.nearObjPosDis(self.mouse_pos, all_obj, self.cursor_selected_obj_pos_dis[0] == None)
             if near_obj_pos_dis[0] != None:
-                self.cursor_near_obj_pos_dis = near_obj_pos_dis[0]
+                self.cursor_near_obj_pos_dis = near_obj_pos_dis
             else:
                 self.cursor_near_obj_pos_dis = [None, self.mouse_pos, None]
-        elif w.operate_mode == 'Arrow':
+
+        else: # カーソルモードじゃなかったらカーソルモードで青くはならない
+            if self.cursor_selected_obj_pos_dis[0] != None:
+                self.cursor_selected_obj_pos_dis[0].setFrameBlue(False)
+                self.cursor_selected_obj_pos_dis = [None, self.mouse_pos, None]
+        if w.operate_mode == 'Arrow':
             if self.latest_arrow_id != -1:
                 ar = w.arrow_manager.arrow_list[self.latest_arrow_id]
                 # judge with Block and Combine
                 all_obj = w.block_manager.block_list + w.combine_manager.combine_list
 
                 # TODO posをカーソルの位置ではなく矢印の終端にする
-                near_obj_pos_dis = math_util.nearObjPosDis(self.mouse_pos, all_obj)
+                near_obj_pos_dis = math_util.nearObjPosDis(self.mouse_pos, all_obj, True)
                 if near_obj_pos_dis[0] != None:
                     ar.setWayPoint(near_obj_pos_dis)
                 else:
                     ar.setWayPoint([None, self.mouse_pos, None])
             else:
                 all_obj = w.arrow_manager.arrow_list + w.block_manager.block_list + w.combine_manager.combine_list
-                near_obj_pos_dis = math_util.nearObjPosDis(self.mouse_pos, all_obj)
+                near_obj_pos_dis = math_util.nearObjPosDis(self.mouse_pos, all_obj, True)
                 if near_obj_pos_dis[0] != None:
                     w.arrow_manager.updateObjPosDis(near_obj_pos_dis)
                 else:
