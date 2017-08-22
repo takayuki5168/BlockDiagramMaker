@@ -21,13 +21,19 @@ class BlockManager:
         for b in self.block_list:
             b.paint(widget, canvas)
 
+    def whichBlue(self):
+        for b in self.block_list:
+            if b.is_blue:
+                return self.block_list.index(b)
+        return -1
+
 class Block:
 
     def __init__(self, pos):
         self.start_pos = pos
         self.end_pos = pos
 
-        self.frame_blue = False # 枠を青くするかどうか
+        self.is_blue = False # 枠を青くするかどうか
 
         self.label_deno = None # 分母の式ラベル
         self.label_nume = None # 分子の式ラベル
@@ -123,7 +129,7 @@ class Block:
         if self.mode == -1:
             return
 
-        if self.frame_blue == False:
+        if self.is_blue == False:
             canvas.setPen(QPen(QColor(0, 0, 0), 2))
         else:
             canvas.setPen(QPen(QColor(0, 0, 255), 2))
@@ -141,13 +147,12 @@ class Block:
 
     def setFrameBlue(self, blue_or_not):
         if blue_or_not:
-            self.frame_blue = True
+            self.is_blue = True
         else:
-            self.frame_blue = False
+            self.is_blue = False
 
-    def onRightClick(self, pos):
-        menu = QMenu(self)
-        delete = QAction('Delete', self)
+    def onRightClick(self, pos, widget):
+        menu = QMenu(widget)
+        delete = QAction('Delete', widget)
         menu.addAction(delete)
-        menu.exec_(pos)
-        menu.exec_(self.mapToGlobal(self.event.mouse_pos))
+        menu.exec_(widget.mapToGlobal(widget.event.mouse_pos))

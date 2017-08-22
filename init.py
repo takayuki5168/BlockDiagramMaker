@@ -8,7 +8,10 @@ def init(widget):
     initUI(widget)
     initTimer(widget)
     initEvent(widget)
-    initContextMenu(widget)
+    #initContextMenu(widget)
+
+    widget.setMouseTracking(True)
+    widget.operate_mode = 'None'
 
 def initUI(widget):
     initMenubar(widget)

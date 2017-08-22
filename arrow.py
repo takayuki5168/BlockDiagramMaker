@@ -29,7 +29,7 @@ class Arrow:
         self.pos = [obj_pos_dis[1]] # すでに定まっている点群
         self.way_pos = self.pos # 選択途中の点群
 
-        self.frame_blue = False # 枠を青くするかどうか
+        self.is_blue = False # 枠を青くするかどうか
 
         self.mode = 0 # -1:死 0:選択途中 1:選択終了 
 
@@ -68,7 +68,7 @@ class Arrow:
             return
 
         # Line
-        if self.frame_blue == False:
+        if self.is_blue == False:
             canvas.setPen(QPen(QColor(0, 0, 0), 2))
         else:
             canvas.setPen(QPen(QColor(0, 0, 255), 2))
@@ -103,6 +103,6 @@ class Arrow:
 
     def setFrameBlue(self, blue_or_not):
         if blue_or_not:
-            self.frame_blue = True
+            self.is_blue = True
         else:
-            self.frame_blue = False
+            self.is_blue = False

@@ -14,10 +14,9 @@ class MyWidget(QMainWindow):#QWidget):
 
     def __init__(self):
         super().__init__()
-        signal.signal(signal.SIGINT, self.sigIntHandler)
         init.init(self)
-        self.setMouseTracking(True)
-        self.operate_mode = 'None'
+
+        signal.signal(signal.SIGINT, self.sigIntHandler)
 
         self.show()
 
