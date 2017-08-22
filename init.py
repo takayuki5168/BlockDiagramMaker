@@ -1,61 +1,63 @@
-from PyQt5.QtWidgets import * #QWidget, QPushButton, QFrame, QApplication, QLineEdit
-from PyQt5.QtGui import *
-from PyQt5.QtCore import Qt, QTimer
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+from PyQt5.QtWidgets import qApp
+from PyQt5.QtCore import QTimer
 
 import menubar, button, event, block, arrow, combine, simulate, analysis
 
-def init(widget):
-    initUI(widget)
-    initTimer(widget)
-    initEvent(widget)
+def init(window):
+    initUI(window)
+    initTimer(window)
+    initEvent(window)
 
-    widget.setMouseTracking(True)
-    widget.operate_mode = 'None'
+    window.setMouseTracking(True)
+    window.operate_mode = 'None'
 
-def initUI(widget):
-    initMenubar(widget)
-    initButton(widget)
-    initBlock(widget)
-    initArrow(widget)
-    initCombine(widget)
-    initSimulate(widget)
-    initAnalysis(widget)
+def initUI(window):
+    initMenubar(window)
+    initButton(window)
+    initBlock(window)
+    initArrow(window)
+    initCombine(window)
+    initSimulate(window)
+    initAnalysis(window)
 
-    widget.setGeometry(300, 300, 640, 480)
-    widget.setWindowTitle('BlockDiagramMaker')
+    window.setGeometry(300, 300, 640, 480)
+    window.setWindowTitle('BlockDiagramMaker')
 
-def initMenubar(widget):
-    widget.menu_manager = menubar.MenubarManager(widget)
+def initMenubar(window):
+    window.menu_manager = menubar.MenubarManager(window)
 
-    widget.menu_manager.pushMenu('&File')
-    widget.menu_manager.pushAction(widget, 0, 'po.png', '&Exit', 'Ctrl+Q', 'Exit application', qApp.quit)
+    window.menu_manager.pushMenu('&File')
+    window.menu_manager.pushAction(window, 0, 'po.png', '&Exit', 'Ctrl+Q', 'Exit application', qApp.quit)
 
-def initButton(widget):
-    widget.button_manager = button.ButtonManager()
+def initButton(window):
+    window.button_manager = button.ButtonManager()
 
     name = ['Cursor', 'Block', 'Arrow', 'Combine', 'Simulate', 'Exit']
     for i in range(len(name)):
-        widget.button_manager.push(name[i], widget, 10 + i * 65, 30, widget.setOperateMode)
+        window.button_manager.push(name[i], window, 10 + i * 65, 30, window.setOperateMode)
 
-def initBlock(widget):
-    widget.block_manager = block.BlockManager()
+def initBlock(window):
+    window.block_manager = block.BlockManager()
 
-def initArrow(widget):
-    widget.arrow_manager = arrow.ArrowManager()
+def initArrow(window):
+    window.arrow_manager = arrow.ArrowManager()
 
-def initCombine(widget):
-    widget.combine_manager = combine.CombineManager()
+def initCombine(window):
+    window.combine_manager = combine.CombineManager()
 
-def initSimulate(widget):
-    widget.simulate = simulate.Simulate()
+def initSimulate(window):
+    window.simulate = simulate.Simulate()
 
-def initAnalysis(widget):
-    widget.analysis = analysis.Analysis()
+def initAnalysis(window):
+    window.analysis = analysis.Analysis()
 
-def initTimer(widget):
-    widget.timer = QTimer(widget)
-    widget.timer.timeout.connect(widget.update)
-    widget.timer.start(10) # 10ms間隔で更新
+def initTimer(window):
+    window.timer = QTimer(window)
+    window.timer.timeout.connect(window.update)
+    window.timer.start(10) # 10ms間隔で更新
 
-def initEvent(widget):
-    widget.event = event.Event()
+def initEvent(window):
+    window.event = event.Event()

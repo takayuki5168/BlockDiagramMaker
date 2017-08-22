@@ -4,13 +4,12 @@
 import sys
 import signal
 
-from PyQt5.QtWidgets import * #QWidget, QPushButton, QFrame, QApplication, QLineEdit
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QFrame, QApplication, QLineEdit
+from PyQt5.QtGui import QPainter
 
 import init, event, button, block, arrow
 
-class MyWidget(QMainWindow):#QWidget):
+class MyWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
@@ -58,5 +57,5 @@ class MyWidget(QMainWindow):#QWidget):
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)
-    my_widget = MyWidget()
+    my_window = MyWindow()
     sys.exit(app.exec_())

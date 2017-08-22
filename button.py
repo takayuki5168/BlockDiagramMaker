@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QFrame, QApplication, QLineEdit
+from PyQt5.QtWidgets import QPushButton, QFrame, QApplication, QLineEdit
 from PyQt5.QtGui import QColor
 
 class ButtonManager:
@@ -6,8 +6,8 @@ class ButtonManager:
     def __init__(self):
         self.button_list = []
 
-    def push(self, name, widget, x, y, func):
-        button = ToggleButton(name, widget, x, y, func)
+    def push(self, name, window, x, y, func):
+        button = ToggleButton(name, window, x, y, func)
         self.button_list.append(button)
 
     def setButton(self, text):
@@ -19,8 +19,8 @@ class ButtonManager:
 
 class ToggleButton:
 
-    def __init__(self, name, widget, x, y, func):
-        self.button = QPushButton(name, widget)
+    def __init__(self, name, window, x, y, func):
+        self.button = QPushButton(name, window)
         self.button.setCheckable(True)
         self.button.move(x, y)
         self.button.clicked[bool].connect(func)

@@ -3,9 +3,8 @@
 
 import sys
 
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import QPoint
+from PyQt5.QtGui import QPen, QColor
+#from PyQt5.QtCore import QPoint
 
 import event
 
@@ -14,13 +13,13 @@ class CombineManager:
     def __init__(self):
         self.combine_list = [] # list of managing Combine
 
-    def push(self, widget, pos):
+    def push(self, window, pos):
         combine = Combine(pos)
         self.combine_list.append(combine)
 
-    def paint(self, widget, canvas):
+    def paint(self, window, canvas):
         for c in self.combine_list:
-            c.paint(widget, canvas)
+            c.paint(window, canvas)
 
 class Combine:
 
@@ -38,7 +37,7 @@ class Combine:
         self.input = []
         self.output = []
 
-    def paint(self, widget, canvas):
+    def paint(self, window, canvas):
         if self.mode == -1:
             return
 

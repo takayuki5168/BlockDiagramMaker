@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
+from PyQt5.QtGui import QPen, QColor
 from PyQt5.QtCore import QPoint
 
 class ArrowManager:
@@ -12,13 +11,13 @@ class ArrowManager:
 
         self.selected_obj_pos_dis = [] # Arrowモードで選択しているオブジェクト
 
-    def push(self, widget, num):
+    def push(self, window, num):
         arrow = Arrow(self.selected_obj_pos_dis, num)
         self.arrow_list.append(arrow)
 
-    def paint(self, widget, canvas):
+    def paint(self, window, canvas):
         for a in self.arrow_list:
-            a.paint(widget, canvas)
+            a.paint(window, canvas)
 
     def updateObjPosDis(self, obj_pos_dis):
         self.selected_obj_pos_dis = obj_pos_dis
@@ -63,7 +62,7 @@ class Arrow:
     def removeLatestPoint(self):
         self.way_pos = self.way_pos[:-1]
 
-    def paint(self, widget, canvas):
+    def paint(self, window, canvas):
         if self.mode == -1:
             return
 
