@@ -8,6 +8,7 @@ def init(widget):
     initUI(widget)
     initTimer(widget)
     initEvent(widget)
+    initContextMenu(widget)
 
 def initUI(widget):
     initMenubar(widget)
@@ -53,3 +54,6 @@ def initTimer(widget):
 def initEvent(widget):
     widget.event = event.Event()
 
+def initContextMenu(widget):
+    widget.setContextMenuPolicy(Qt.CustomContextMenu)
+    widget.customContextMenuRequested.connect(lambda : widget.event.onRightClick(widget))

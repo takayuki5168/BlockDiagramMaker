@@ -144,3 +144,10 @@ class Block:
             self.frame_blue = True
         else:
             self.frame_blue = False
+
+    def onRightClick(self, pos):
+        menu = QMenu(self)
+        delete = QAction('Delete', self)
+        menu.addAction(delete)
+        menu.exec_(pos)
+        menu.exec_(self.mapToGlobal(self.event.mouse_pos))

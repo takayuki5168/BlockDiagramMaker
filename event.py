@@ -13,13 +13,21 @@ class Event:
         self.cursor_near_obj = -1 # カーソル、Arrowの選択範囲可能のオブジェクト
         self.cursor_selected_obj = -1 # カーソル、Arrowが選択しているオブジェクト
 
+    def onRightClick(self, widget):
+        if self.selected_block_id != -1:
+            widget.block_manager.block_list[self.selected_block_id].onRightClick(self.mouse_pos)
+        elif self.selected_arrow_id != -1:
+            widget.arrow_manager.arrow_list[self.selected_arrow_id].onRightClick(self.mouse_pos)
+        elif self.selected_combine_id != -1:
+            widget.combine_manager.combine_list[self.selected_combine_id].onRightClick(self.mouse_pos)
+
     def mousePress(self, mouse_event, widget):
-        pos = mouse_event.pos()
+        self.mouse_pos = mouse_event.pos()
 
         if widget.operate_mode == 'Block':
             if self.selected_block_id == -1: # create new Block
                 self.selected_block_id = len(widget.block_manager.block_list)
-                widget.block_manager.push(widget, pos)
+                widget.block_manager.push(widget, self.mouse_pos)
                 print('No.' + str(self.selected_block_id) + ' Block has been born')
                 widget.block_manager.block_list[self.selected_block_id].mode = 0
             else:
@@ -55,18 +63,18 @@ class Event:
                         obj.input.append(ar.num)
                     self.selected_arrow_id = -1
                 else:
-                    ar.setPoint(pos)
+                    ar.setPoint(self.mouse_pos)
 
         elif widget.operate_mode == 'Combine':
             if self.selected_combine_id == -1:
                 # create new Combine
                 self.selected_combine_id = len(widget.combine_manager.combine_list)
-                widget.combine_manager.push(widget, pos)
+                widget.combine_manager.push(widget, self.mouse_pos)
                 print('No.' + str(self.selected_combine_id) + ' Combine has been born')
                 self.selected_combine_id = -1
 
     def mouseMove(self, mouse_event, widget):
-        pos = mouse_event.pos()
+        self.mouse_pos = mouse_event.pos()
 
         #if widget.operate_mode == 'Cursor':
         #    all_obj = arrow_manager.arrow_list + block_manager.block_list
@@ -77,30 +85,30 @@ class Event:
                 all_obj = widget.block_manager.block_list + widget.combine_manager.combine_list
 
                 # TODO posをカーソルの位置ではなく矢印の終端にする
-                near_obj_pos_dis = math_util.nearObjPosDis(pos, all_obj)
+                near_obj_pos_dis = math_util.nearObjPosDis(self.mouse_pos, all_obj)
                 if near_obj_pos_dis[0] != None:
                     ar.setWayPoint(near_obj_pos_dis)
                 else:
-                    ar.setWayPoint([None, pos, None])
+                    ar.setWayPoint([None, self.mouse_pos, None])
             else:
                 all_obj = widget.arrow_manager.arrow_list + widget.block_manager.block_list + widget.combine_manager.combine_list
-                near_obj_pos_dis = math_util.nearObjPosDis(pos, all_obj)
+                near_obj_pos_dis = math_util.nearObjPosDis(self.mouse_pos, all_obj)
                 if near_obj_pos_dis[0] != None:
                     widget.arrow_manager.updateObjPosDis(near_obj_pos_dis)
                 else:
-                    widget.arrow_manager.updateObjPosDis([None, pos, None])
+                    widget.arrow_manager.updateObjPosDis([None, self.mouse_pos, None])
 
         elif widget.operate_mode == 'Block':
             if self.selected_block_id != -1:
                 bl = widget.block_manager.block_list[self.selected_block_id]
-                dis = math_util.disPointPoint(pos, bl.start_pos)
+                dis = math_util.disPointPoint(self.mouse_pos, bl.start_pos)
                 if dis > 10:
                     bl.mode = 1
 
-                bl.setEndPoint(pos)
+                bl.setEndPoint(self.mouse_pos)
 
     def mouseRelease(self, mouse_event, widget):
-        pos = mouse_event.pos()
+        self.mousepos = mouse_event.pos()
 
         if widget.operate_mode == 'Block':
             if self.selected_block_id != -1:

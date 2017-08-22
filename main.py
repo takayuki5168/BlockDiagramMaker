@@ -6,6 +6,7 @@ import signal
 
 from PyQt5.QtWidgets import * #QWidget, QPushButton, QFrame, QApplication, QLineEdit
 from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 
 import init, event, button, block, arrow
 
