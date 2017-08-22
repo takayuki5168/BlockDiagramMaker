@@ -3,6 +3,7 @@
 
 import sys
 
+from PyQt5.QtWidgets import QAction, QMenu
 from PyQt5.QtGui import QPen, QColor
 
 import event
@@ -20,6 +21,13 @@ class CombineManager:
         for c in self.combine_list:
             c.paint(w, canvas)
 
+    def whichBlue(self):
+        for c in self.combine_list:
+            if c.is_blue:
+                return self.combine_list.index(c)
+        return -1
+
+
 class Combine:
 
     def __init__(self, pos):
@@ -35,6 +43,9 @@ class Combine:
 
         self.input = []
         self.output = []
+
+    def setMode(self, mode):
+        self.mode = mode
 
     def paint(self, w, canvas):
         if self.mode == -1:
@@ -52,3 +63,10 @@ class Combine:
             self.is_blue = True
         else:
             self.is_blue = False
+
+    def onRightClick(self, pos, w):
+        menu = QMenu(w)
+        action = [(QAction('Delete', w, triggered = lambda : self.setMode(-1)))]
+        for a in action:
+            menu.addAction(a)
+        menu.exec_(w.mapToGlobal(w.event.mouse_pos))

@@ -46,6 +46,9 @@ class Block:
         self.input = []
         self.output = []
 
+    def setMode(self, mode):
+        self.mode = mode
+
     def setEndPoint(self, pos):
         self.end_pos = pos
 
@@ -157,7 +160,8 @@ class Block:
 
     def onRightClick(self, pos, w):
         menu = QMenu(w)
-        action = [(QAction('Analysis Bode', w, triggered = lambda : w.analysis.analysis(w, self, 'bode'))),
+        action = [(QAction('Delete', w, triggered = lambda : self.setMode(-1))),
+                (QAction('Analysis Bode', w, triggered = lambda : w.analysis.analysis(w, self, 'bode'))),
                 QAction('Analysis RootLocus', w, triggered = lambda : w.analysis.analysis(w, self, 'rlocus')),
                 QAction('Analysis Step Response', w, triggered = lambda : w.analysis.analysis(w, self, 'step')),
                 QAction('Analysis Impulse Response', w, triggered = lambda : w.analysis.analysis(w, self, 'impulse'))]

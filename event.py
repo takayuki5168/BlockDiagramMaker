@@ -20,19 +20,21 @@ class Event:
 
         if mouse_event.buttons() == Qt.RightButton: # when RightClick
             block_blue = w.block_manager.whichBlue()
+            arrow_blue = w.arrow_manager.whichBlue()
+            combine_blue = w.combine_manager.whichBlue()
+
             if block_blue != -1:
                 w.block_manager.block_list[block_blue].onRightClick(self.mouse_pos, w)
-            elif self.latest_arrow_id != -1:
-                w.arrow_manager.arrow_list[self.latest_arrow_id].onRightClick(self.mouse_pos)
-            elif self.latest_combine_id != -1:
-                w.combine_manager.combine_list[self.latest_combine_id].onRightClick(self.mouse_pos)
+            elif arrow_blue != -1:
+                w.arrow_manager.arrow_list[arrow_blue].onRightClick(self.mouse_pos, w)
+            elif combine_blue != -1:
+                w.combine_manager.combine_list[combine_blue].onRightClick(self.mouse_pos, w)
 
         if mouse_event.buttons() == Qt.LeftButton: # when LeftClick
             if w.operate_mode == 'Cursor':
                 if self.cursor_near_obj_pos_dis[0] != None:
                     self.cursor_selected_obj_pos_dis = self.cursor_near_obj_pos_dis
                     self.cursor_selected_obj_pos_dis[0].setFrameBlue(True)
-                    print(self.cursor_selected_obj_pos_dis[0].is_blue)
                 else:
                     self.cursor_selected_obj_pos_dis[0].setFrameBlue(False)
                     self.cursor_selected_obj_pos_dis[0] = None

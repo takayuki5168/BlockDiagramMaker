@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+from PyQt5.QtWidgets import QAction, QMenu
 from PyQt5.QtGui import QPen, QColor
 from PyQt5.QtCore import QPoint
 
@@ -22,6 +23,13 @@ class ArrowManager:
     def updateObjPosDis(self, obj_pos_dis):
         self.selected_obj_pos_dis = obj_pos_dis
 
+    def whichBlue(self):
+        for a in self.arrow_list:
+            if a.is_blue:
+                return self.arrow_list.index(a)
+        return -1
+
+
 class Arrow:
 
     def __init__(self, obj_pos_dis, num):
@@ -36,6 +44,9 @@ class Arrow:
         self.selected_obj = -1 # Arrowが選択しているオブジェクト
 
         self.num = num # ルンゲクッタの時に使う矢印のnum
+
+    def setMode(self, mode):
+        self.mode = mode
 
     def setWayPoint(self, near_obj_pos_dis):
         self.near_obj_pos_dis = near_obj_pos_dis
@@ -105,3 +116,10 @@ class Arrow:
             self.is_blue = True
         else:
             self.is_blue = False
+
+    def onRightClick(self, pos, w):
+        menu = QMenu(w)
+        action = [(QAction('Delete', w, triggered = lambda : self.setMode(-1)))]
+        for a in action:
+            menu.addAction(a)
+        menu.exec_(w.mapToGlobal(w.event.mouse_pos))
