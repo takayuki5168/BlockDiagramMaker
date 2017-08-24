@@ -83,7 +83,13 @@ class Event:
                 if self.latest_combine_id == -1:
                     # create new Combine
                     self.latest_combine_id = len(w.combine_manager.combine_list)
-                    w.combine_manager.push(w, self.mouse_pos)
+
+                    arrow_pos_dis = w.combine_manager.selected_arrow_pos_dis
+                    if arrow_pos_dis[0] != None: # 始点がオブジェクト
+                        if type(arrow_pos_dis[0]) == arrow.Arrow: # 始点がArrowのとき
+                            w.combine_manager.push(w, arrow_pos_dis[1])
+                    else:
+                        w.combine_manager.push(w, arrow_pos_dis[1])
                     print('No.' + str(self.latest_combine_id) + ' Combine has been born')
                     self.latest_combine_id = -1
 
@@ -128,8 +134,14 @@ class Event:
                 dis = math_util.disPointPoint(self.mouse_pos, bl.start_pos)
                 if dis > 10:
                     bl.mode = 1
-
                 bl.setEndPoint(self.mouse_pos)
+
+        elif w.operate_mode == 'Combine':
+            near_obj_pos_dis = math_util.nearArrowPosDis(self.mouse_pos, w.arrow_manager.arrow_list, True)
+            if near_obj_pos_dis[0] != None:
+                w.combine_manager.updateArrowPosDis(near_obj_pos_dis)
+            else:
+                w.combine_manager.updateArrowPosDis([None, self.mouse_pos, None])
 
     def mouseRelease(self, mouse_event, w):
         self.mousepos = mouse_event.pos()

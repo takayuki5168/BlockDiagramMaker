@@ -21,6 +21,9 @@ class CombineManager:
         for c in self.combine_list:
             c.paint(w, canvas)
 
+    def updateArrowPosDis(self, arrow_pos_dis):
+        self.selected_arrow_pos_dis = arrow_pos_dis
+
     def whichBlue(self):
         for c in self.combine_list:
             if c.is_blue:
@@ -38,8 +41,8 @@ class Combine:
 
         self.mode = 0 # -1:死 0:選択開始(選択途中) 1:選択途中
 
-        self.near_obj_pos_dis = [] # Blockの二辺とあるオブジェクトとその最短位置、距離
-        self.selected_obj = -1 # Blockが選択しているオブジェクト
+        #self.near_obj_pos_dis = [] # Blockの二辺とあるオブジェクトとその最短位置、距離
+        #self.selected_obj = -1 # Blockが選択しているオブジェクト
 
         self.input = []
         self.output = []

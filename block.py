@@ -8,6 +8,8 @@ from PyQt5.QtGui import QPen, QColor, QFont
 
 import event
 
+power_num = ['', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']
+
 class BlockManager:
 
     def __init__(self):
@@ -66,15 +68,24 @@ class Block:
             if i == len(self.deno_coef) - 1:
                 self.deno += self.deno_coef[i]
             elif i == len(self.deno_coef) - 2:
-                self.deno += self.deno_coef[i] + 's + '
+                if self.deno_coef[i] == '1':
+                    self.deno += 's + '
+                else:
+                    self.deno += self.deno_coef[i] + 's + '
             else:
-                self.deno += self.deno_coef[i] + 's^' + str(len(self.deno_coef) - 1 - i) + ' + '
+                if self.deno_coef[i] == '1':
+                    self.deno += 's' + power_num[len(self.deno_coef) - 1 - i - 1] + ' + '
+                else:
+                    self.deno += self.deno_coef[i] + 's' + power_num[len(self.deno_coef) - 1 - i - 1] + ' + '
+
 
         # 分子を入力
-        self.nume_coef, is_ok = QInputDialog.getText(w, 'Input Diagram', 'Input numeminator(分子):')
-        if is_ok == False:
-            self.mode = -1
-            return
+        self.nume_coef = ''
+        while self.nume_coef == '': # 分子に何か入力されるまで繰り返し
+            self.nume_coef, is_ok = QInputDialog.getText(w, 'Input Diagram', 'Input numeminator(分子):')
+            if is_ok == False:
+                self.mode = -1
+                return
         self.nume_coef = self.nume_coef.split(' ')
         while '' in self.nume_coef:
             self.nume_coef.remove('')
@@ -83,15 +94,15 @@ class Block:
             if i == len(self.nume_coef) - 1:
                 self.nume += self.nume_coef[i]
             elif i == len(self.nume_coef) - 2:
-                self.nume += self.nume_coef[i] + 's + '
+                if self.nume_coef[i] == '1':
+                    self.nume += 's + '
+                else:
+                    self.nume += self.nume_coef[i] + 's + '
             else:
-                self.nume += self.nume_coef[i] + 's^' + str(len(self.nume_coef) - 1 - i) + ' + '
-
-        while self.nume == '':
-            self.nume, is_ok = QInputDialog.getText(w, 'Input Diagram', 'Input numeminator(分子):')
-            if is_ok == False:
-                self.mode = -1
-                return
+                if self.nume_coef[i] == '1':
+                    self.nume += 's' + power_num[len(self.nume_coef) - 1 - i - 1] + ' + '
+                else:
+                    self.nume += self.nume_coef[i] + 's' + power_num[len(self.nume_coef) - 1 - i - 1] + ' + '
 
         font = QFont()
         font.setPointSize(20)
@@ -106,8 +117,6 @@ class Block:
                     (self.start_pos.y() + self.end_pos.y()) / 2.0 - nume_height / 2.0)
             self.label_nume.setFixedWidth(nume_width * 2)
             self.label_nume.setFont(font)
-            #print(nume_width)
-            #print(nume_height)
         else: # 分母もあるとき
             self.label_deno = QLabel(self.deno, w)
             self.label_nume = QLabel(self.nume, w)

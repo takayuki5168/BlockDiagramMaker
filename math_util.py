@@ -9,6 +9,11 @@ def disPointPoint(point1_pos, point2_pos):
     po = point1_pos - point2_pos
     return math.hypot(po.x(), po.y())
 
+# 点と点
+def nearestPointPoint(point1_pos, point2_pos):
+    dis = disPointPoint(point1_pos, point2_pos)
+    return dis
+
 # 点と円
 def nearestPointCircle(point_pos, circle_pos, radius):
     dis = disPointPoint(point_pos, circle_pos)
@@ -156,6 +161,43 @@ def nearObjPosDis(pos, all_obj, is_blue):
 
     if pos_all == []: # 既存のオブジェクトが無い
         # self.setEndPoint(mouse_pos)
+        return [None, None, None]
+
+    # 距離が最小の時のdis, pos, objを求める
+    min_dis = min(dis_all)
+    min_pos = pos_all[dis_all.index(min_dis)]
+    min_obj = obj_all[dis_all.index(min_dis)]
+
+
+    for o in all_obj:
+        # まずは全部青でなくする
+        if is_blue == True:
+            o.setFrameBlue(False)
+    if min_dis < 10: # 距離が十分近かったら
+        # そのオブジェクトを青にして選択する
+        if is_blue == True:
+            min_obj.setFrameBlue(True)
+        return [min_obj, min_pos, min_dis]
+    else:
+        return [None, None, None]
+
+def nearArrowPosDis(pos, all_obj, is_blue):
+    pos_all = []
+    dis_all = []
+    obj_all = []
+
+    # カーソルと各オブジェクトの最短位置と距離
+    for o in all_obj:
+        if o.mode == -1:
+            continue
+        if type(o) == arrow.Arrow:
+            tmp_pos = o.way_pos[:-1]
+            tmp_dis = nearestPointPoint(pos, o.way_pos[:-1])
+        pos_all.append(tmp_pos)
+        dis_all.append(tmp_dis)
+        obj_all.append(o)
+
+    if pos_all == []: # 既存のオブジェクトが無い
         return [None, None, None]
 
     # 距離が最小の時のdis, pos, objを求める
