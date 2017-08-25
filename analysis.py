@@ -13,9 +13,14 @@ class Analysis:
 
     def analysis(self, w, block, which):
         nume = [int(n) for n in block.nume_coef]
-        deno = [int(d) for d in block.deno_coef]
+        if block.deno_coef == []:
+            deno = [1]
+        else:
+            deno = [int(d) for d in block.deno_coef]
         nume.reverse()
         deno.reverse()
+        print(nume)
+        print(deno)
         system = matlab.tf(nume, deno)
 
         if which == 'bode':
