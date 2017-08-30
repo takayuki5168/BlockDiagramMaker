@@ -64,20 +64,20 @@ class Block:
         while '' in self.deno_coef:
             self.deno_coef.remove('')
         self.deno = ''
-        for i in range(len(self.deno_coef)):
-            if i == len(self.deno_coef) - 1:
-                self.deno += self.deno_coef[i]
-            elif i == len(self.deno_coef) - 2:
-                if self.deno_coef[i] == '1':
-                    self.deno += 's + '
+        if self.deno_coef != ['1']:
+            for i in range(len(self.deno_coef)):
+                if i == len(self.deno_coef) - 1:
+                    self.deno += self.deno_coef[i]
+                elif i == len(self.deno_coef) - 2:
+                    if self.deno_coef[i] == '1':
+                        self.deno += 's + '
+                    else:
+                        self.deno += self.deno_coef[i] + 's + '
                 else:
-                    self.deno += self.deno_coef[i] + 's + '
-            else:
-                if self.deno_coef[i] == '1':
-                    self.deno += 's' + power_num[len(self.deno_coef) - 1 - i - 1] + ' + '
-                else:
-                    self.deno += self.deno_coef[i] + 's' + power_num[len(self.deno_coef) - 1 - i - 1] + ' + '
-
+                    if self.deno_coef[i] == '1':
+                        self.deno += 's' + power_num[len(self.deno_coef) - 1 - i - 1] + ' + '
+                    else:
+                        self.deno += self.deno_coef[i] + 's' + power_num[len(self.deno_coef) - 1 - i - 1] + ' + '
 
         # 分子を入力
         self.nume_coef = ''

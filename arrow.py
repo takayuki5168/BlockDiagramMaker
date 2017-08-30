@@ -3,7 +3,7 @@
 
 from PyQt5.QtWidgets import QAction, QMenu
 from PyQt5.QtGui import QPen, QColor
-from PyQt5.QtCore import QPoint
+from PyQt5.QtCore import Qt, QPoint
 
 class ArrowManager:
 
@@ -44,6 +44,10 @@ class Arrow:
         self.selected_obj = -1 # Arrowが選択しているオブジェクト
 
         self.num = num # ルンゲクッタの時に使う矢印のnum
+
+        self.direct = -1 # 矢印の最後の向き
+
+        self.dot_line = False # 点線を書くか
 
     def setMode(self, mode):
         self.mode = mode
@@ -95,6 +99,8 @@ class Arrow:
                 direct_sgn = 0
             else:
                 direct_sgn = direct / abs(direct)
+                self.direct_x = 0
+                self.direct_y = direct_sgn
             p = []
             p.append(QPoint(self.way_pos[-1].x() - 6, self.way_pos[-1].y() - direct_sgn * 10))
             p.append(QPoint(self.way_pos[-1].x(), self.way_pos[-1].y() - direct_sgn * 1))
@@ -104,12 +110,22 @@ class Arrow:
         else:
             direct = self.way_pos[-1].x() - self.way_pos[-2].x()
             direct_sgn = direct / abs(direct)
+            self.direct_x = direct_sgn
+            self.direct_y = 0
             p = []
             p.append(QPoint(self.way_pos[-1].x() - direct_sgn * 10, self.way_pos[-1].y() - 6))
             p.append(QPoint(self.way_pos[-1].x() - direct_sgn * 1, self.way_pos[-1].y()))
             p.append(QPoint(self.way_pos[-1].x() - direct_sgn * 10, self.way_pos[-1].y() + 6))
             for i in range(len(p) - 1):
                 canvas.drawLine(p[i], p[i + 1])
+
+        if self.dot_line == True:
+            pen = QPen(Qt.black, 2, Qt.SolidLine)
+            pen.setStyle(Qt.DotLine)
+            canvas.setPen(pen)
+            canvas.drawLine(self.way_pos[-1].x(), 0, self.way_pos[-1].x(), 1000)
+            canvas.drawLine(0, self.way_pos[-1].y(), 1000, self.way_pos[-1].y())
+            self.dot_line = False
 
     def setFrameBlue(self, blue_or_not):
         if blue_or_not:
@@ -123,3 +139,4 @@ class Arrow:
         for a in action:
             menu.addAction(a)
         menu.exec_(w.mapToGlobal(w.event.mouse_pos))
+

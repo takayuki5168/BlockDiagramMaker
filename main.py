@@ -8,12 +8,15 @@ from PyQt5.QtWidgets import QMainWindow, QPushButton, QFrame, QApplication, QLin
 from PyQt5.QtGui import QPainter
 
 import init, event, button, block, arrow
+import identificate
 
 class MyWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
         init.init(self)
+
+        self.identificate.execute(self)
 
         signal.signal(signal.SIGINT, self.sigIntHandler)
 

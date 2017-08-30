@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import * #Qw, QPushButton, QFrame, QApplication, QLineEdit
 from PyQt5.QtGui import *
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QPoint
 
 import arrow, block, combine, math_util
 
@@ -87,6 +87,7 @@ class Event:
                     arrow_pos_dis = w.combine_manager.selected_arrow_pos_dis
                     if arrow_pos_dis[0] != None: # 始点がオブジェクト
                         if type(arrow_pos_dis[0]) == arrow.Arrow: # 始点がArrowのとき
+                            #w.combine_manager.push(w, arrow_pos_dis[1] + QPoint(10 * arrow_pos_dis[0].direct_x, 10 * arrow_pos_dis[0].direct_y))
                             w.combine_manager.push(w, arrow_pos_dis[1])
                     else:
                         w.combine_manager.push(w, arrow_pos_dis[1])
@@ -118,8 +119,10 @@ class Event:
                 near_obj_pos_dis = math_util.nearObjPosDis(self.mouse_pos, all_obj, True)
                 if near_obj_pos_dis[0] != None:
                     ar.setWayPoint(near_obj_pos_dis)
+                    ar.dot_line = True
                 else:
                     ar.setWayPoint([None, self.mouse_pos, None])
+                    ar.dot_line = True
             else:
                 all_obj = w.arrow_manager.arrow_list + w.block_manager.block_list + w.combine_manager.combine_list
                 near_obj_pos_dis = math_util.nearObjPosDis(self.mouse_pos, all_obj, True)

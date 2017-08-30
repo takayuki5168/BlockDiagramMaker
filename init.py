@@ -4,7 +4,7 @@
 from PyQt5.QtWidgets import qApp
 from PyQt5.QtCore import QTimer
 
-import menubar, button, event, block, arrow, combine, simulate, analysis
+import menubar, button, event, block, arrow, combine, simulate, analysis, identificate
 
 def init(w):
     initUI(w)
@@ -22,6 +22,7 @@ def initUI(w):
     initCombine(w)
     initSimulate(w)
     initAnalysis(w)
+    initIdentificate(w)
 
     w.setGeometry(200, 0, 960, 720)
     w.setWindowTitle('BlockDiagramMaker')
@@ -31,6 +32,9 @@ def initMenubar(w):
 
     w.menu_manager.pushMenu('&File')
     w.menu_manager.pushAction(w, 0, 'po.png', '&Exit', 'Ctrl+Q', 'Exit application', qApp.quit)
+
+    w.menu_manager.pushMenu('&Tool')
+    w.menu_manager.pushAction(w, 1, 'po.png', '&System Identification', 'Ctrl+Q', 'System Identification', lambda : w.identificate.execute(w))
 
 def initButton(w):
     w.button_manager = button.ButtonManager()
@@ -53,6 +57,9 @@ def initSimulate(w):
 
 def initAnalysis(w):
     w.analysis = analysis.Analysis()
+
+def initIdentificate(w):
+    w.identificate = identificate.Identificate()
 
 def initTimer(w):
     w.timer = QTimer(w)

@@ -191,8 +191,14 @@ def nearArrowPosDis(pos, all_obj, is_blue):
         if o.mode == -1:
             continue
         if type(o) == arrow.Arrow:
-            tmp_pos = o.way_pos[:-1]
-            tmp_dis = nearestPointPoint(pos, o.way_pos[:-1])
+            tmp_pos = o.way_pos[-1]
+            tmp_dis = nearestPointPoint(pos, o.way_pos[-1])
+        pos_all.append(tmp_pos)
+        dis_all.append(tmp_dis)
+        obj_all.append(o)
+        if type(o) == arrow.Arrow:
+            tmp_pos = o.way_pos[0]
+            tmp_dis = nearestPointPoint(pos, o.way_pos[0])
         pos_all.append(tmp_pos)
         dis_all.append(tmp_dis)
         obj_all.append(o)
@@ -206,6 +212,7 @@ def nearArrowPosDis(pos, all_obj, is_blue):
     min_obj = obj_all[dis_all.index(min_dis)]
 
 
+    # TODO 矢印全体でなく端点のみ青にする
     for o in all_obj:
         # まずは全部青でなくする
         if is_blue == True:
@@ -214,6 +221,15 @@ def nearArrowPosDis(pos, all_obj, is_blue):
         # そのオブジェクトを青にして選択する
         if is_blue == True:
             min_obj.setFrameBlue(True)
-        return [min_obj, min_pos, min_dis]
+        if min_pos == min_obj.way_pos[0]: # 最初の点だったら
+            po = min_obj.way_pos[0] - min_obj.way_pos[1]
+            tmp_pos = min_pos + po * 9 / max(abs(po.x()), abs(po.y()))
+            return [min_obj, tmp_pos, min_dis]
+        elif min_pos == min_obj.way_pos[-1]: # 最後の点だったら
+            po = min_obj.way_pos[-1] - min_obj.way_pos[-2]
+            tmp_pos = min_pos + po * 9 / max(abs(po.x()), abs(po.y()))
+            return [min_obj, tmp_pos, min_dis]
+        else:
+            return [None, None, None]
     else:
         return [None, None, None]
