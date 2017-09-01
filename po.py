@@ -1,65 +1,48 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
+#!/usr/bin/env python3
 
 import sys
-from PyQt5.QtWidgets import (QMainWindow, QTextEdit, 
-    QAction, QFileDialog, QApplication)
-from PyQt5.QtGui import QIcon
-
-# テキストフォーム中心の画面のためQMainWindowを継承する
-class Example(QMainWindow):
-
-    def __init__(self):
-        super().__init__()
-
-        self.initUI()
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 
 
-    def initUI(self):      
+class MainWindow(QWidget):
+    def __init__(self, parent=None):
+        super(MainWindow, self).__init__(parent)
+        # ボタンの作成
+        makeWindowButton = QPushButton("&make window")
+        # クリックイベント(makeWindow())の追加
+        makeWindowButton.clicked.connect(self.makeWindow)
+        # レイアウトの作成
+        layout = QHBoxLayout()
+        # レイアウトにボタンの追加
+        layout.addWidget(makeWindowButton)
+        # ウィンドウにレイアウトを追加
+        self.setLayout(layout)
 
-        self.textEdit = QTextEdit()
-        self.setCentralWidget(self.textEdit)
-        self.statusBar()
+    def makeWindow(self):
+        # サブウィンドウの作成
+        subWindow = SubWindow()
+        # サブウィンドウの表示
+        subWindow.show()
 
-        # メニューバーのアイコン設定
-        openFile = QAction(QIcon('imoyokan.jpg'), 'Open', self)
-        # ショートカット設定
-        openFile.setShortcut('Ctrl+O')
-        # ステータスバー設定
-        openFile.setStatusTip('Open new File')
-        openFile.triggered.connect(self.showDialog)
+class SubWindow(QWidget):
+    def __init__(self, parent=None):
+        # こいつがサブウィンドウの実体？的な。ダイアログ
+        self.w = QDialog(parent)
+        label = QLabel()
+        label.setText('Sub Window')
+        layout = QHBoxLayout()
+        layout.addWidget(label)
+        self.w.setLayout(layout)
 
-        # メニューバー作成
-        menubar = self.menuBar()
-        fileMenu = menubar.addMenu('&File')
-        fileMenu.addAction(openFile)       
-
-        self.setGeometry(300, 300, 350, 300)
-        self.setWindowTitle('File dialog')
-        self.show()
-
-
-    def showDialog(self):
-
-        # 第二引数はダイアログのタイトル、第三引数は表示するパス
-        # fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')
-        fname = QFileDialog.getExistingDirectory(self, 'Open file', '/home')
-        print(fname)
-        print(fname[0])
-
-        # fname[0]は選択したファイルのパス（ファイル名を含む）
-        if fname[0]:
-            # ファイル読み込み
-            f = open(fname[0], 'r')
-
-            # テキストエディタにファイル内容書き込み
-            with f:
-                data = f.read()
-                self.textEdit.setText(data)        
+    def show(self):
+        self.w.exec_()
 
 if __name__ == '__main__':
-
+    import sys
     app = QApplication(sys.argv)
-    ex = Example()
+    main_window = MainWindow()
+
+    main_window.show()
     sys.exit(app.exec_())

@@ -50,8 +50,9 @@ class MyWindow(QMainWindow):
 
             if self.operate_mode == 'Simulate':
                 print('Simulate')
-                self.simulate.initArrowFunc(self)
-                self.simulate.updateArrowFunc(self)
+                self.identificate.makeSubWindow()
+                #self.simulate.initArrowFunc(self)
+                #self.simulate.updateArrowFunc(self)
             elif self.operate_mode == 'Clear':
                 for b in self.block_manager.block_list:
                     b.mode = -1
